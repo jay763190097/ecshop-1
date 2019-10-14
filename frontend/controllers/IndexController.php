@@ -13,6 +13,11 @@ class IndexController extends Controller
 
     public function actionIndex(){
 
+        //首页banner
+
+
+
+
         return $this->render('index');
 
     }
