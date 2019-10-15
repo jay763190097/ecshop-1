@@ -16,7 +16,7 @@
             <?php foreach ($banner as $k) { ?>
                 <div class="swiper-slide">
                     <a href="">
-                        <img src="<?=$k['photo']['thumb']?>"/>
+                        <img src="<?= $k['photo']['thumb'] ?>"/>
                     </a>
                 </div>
             <?php } ?>
@@ -103,27 +103,40 @@
             <a href="" class="more">更多 &gt;</a>
         </div>
         <ul class="discount_goods">
-            <li>
-                <a href="goods_details.html" class="goods_img">
-                    <img src="images/goods001.jpg"/>
-                </a>
-                <a href="goods_details.html" class="goods_title"><span class="haitao">海淘</span>我是商品名称限时优惠我是商品名称限时优惠</a>
-                <span class="choose_prize">&yen;99.9</span>
-            </li>
-            <li>
-                <a href="goods_details.html" class="goods_img">
-                    <img src="images/goods001.jpg"/>
-                </a>
-                <a href="goods_details.html" class="goods_title"><span class="haitao">海淘</span>我是商品名称限时优惠我是商品名称限时优惠</a>
-                <span class="choose_prize">&yen;99.9</span>
-            </li>
-            <li>
-                <a href="goods_details.html" class="goods_img">
-                    <img src="images/goods001.jpg"/>
-                </a>
-                <a href="goods_details.html" class="goods_title"><span class="haitao">海淘</span>我是商品名称限时优惠我是商品名称限时优惠</a>
-                <span class="choose_prize">&yen;99.9</span>
-            </li>
+
+
+            <?php foreach ($haitao as $k) { ?>
+                <li>
+                    <a href="goods_details.html" class="goods_img">
+                        <img src="<?= $k['goods_thumb'] ?>"/>
+                    </a>
+                    <a href="goods_details.html" class="goods_title"><span
+                                class="haitao">海淘</span><?= $k['goods_name'] ?></a>
+                    <span class="choose_prize">&yen;<?= $k['virtual_sales'] ?></span>
+                </li>
+
+            <?php } ?>
+            <!--            <li>-->
+            <!--                <a href="goods_details.html" class="goods_img">-->
+            <!--                    <img src="images/goods001.jpg"/>-->
+            <!--                </a>-->
+            <!--                <a href="goods_details.html" class="goods_title"><span class="haitao">海淘</span>我是商品名称限时优惠我是商品名称限时优惠</a>-->
+            <!--                <span class="choose_prize">&yen;99.9</span>-->
+            <!--            </li>-->
+            <!--            <li>-->
+            <!--                <a href="goods_details.html" class="goods_img">-->
+            <!--                    <img src="images/goods001.jpg"/>-->
+            <!--                </a>-->
+            <!--                <a href="goods_details.html" class="goods_title"><span class="haitao">海淘</span>我是商品名称限时优惠我是商品名称限时优惠</a>-->
+            <!--                <span class="choose_prize">&yen;99.9</span>-->
+            <!--            </li>-->
+            <!--            <li>-->
+            <!--                <a href="goods_details.html" class="goods_img">-->
+            <!--                    <img src="images/goods001.jpg"/>-->
+            <!--                </a>-->
+            <!--                <a href="goods_details.html" class="goods_title"><span class="haitao">海淘</span>我是商品名称限时优惠我是商品名称限时优惠</a>-->
+            <!--                <span class="choose_prize">&yen;99.9</span>-->
+            <!--            </li>-->
         </ul>
     </div>
 
@@ -134,27 +147,38 @@
             <a href="" class="more">更多 &gt;</a>
         </div>
         <ul class="discount_goods">
+
+            <?php foreach ($self as $k){?>
             <li>
                 <a href="goods_details.html" class="goods_img">
-                    <img src="images/goods001.jpg"/>
+                    <img src="<?=$k['goods_thumb']?>"/>
                 </a>
-                <a href="goods_details.html" class="goods_title"><span class="own">自营</span>我是商品名称限时优惠我是商品名称限时优惠</a>
-                <span class="choose_prize">&yen;99.9</span>
+                <a href="goods_details.html" class="goods_title"><span class="own">自营</span><?=$k['goods_name']?></a>
+                <span class="choose_prize">&yen;<?=$k['virtual_sales']?></span>
             </li>
-            <li>
-                <a href="goods_details.html" class="goods_img">
-                    <img src="images/goods001.jpg"/>
-                </a>
-                <a href="goods_details.html" class="goods_title"><span class="own">自营</span>我是商品名称限时优惠我是商品名称限时优惠</a>
-                <span class="choose_prize">&yen;99.9</span>
-            </li>
-            <li>
-                <a href="goods_details.html" class="goods_img">
-                    <img src="images/goods001.jpg"/>
-                </a>
-                <a href="goods_details.html" class="goods_title"><span class="own">自营</span>我是商品名称限时优惠我是商品名称限时优惠</a>
-                <span class="choose_prize">&yen;99.9</span>
-            </li>
+            <?php }?>
+
+<!--            <li>-->
+<!--                <a href="goods_details.html" class="goods_img">-->
+<!--                    <img src="images/goods001.jpg"/>-->
+<!--                </a>-->
+<!--                <a href="goods_details.html" class="goods_title"><span class="own">自营</span>我是商品名称限时优惠我是商品名称限时优惠</a>-->
+<!--                <span class="choose_prize">&yen;99.9</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--                <a href="goods_details.html" class="goods_img">-->
+<!--                    <img src="images/goods001.jpg"/>-->
+<!--                </a>-->
+<!--                <a href="goods_details.html" class="goods_title"><span class="own">自营</span>我是商品名称限时优惠我是商品名称限时优惠</a>-->
+<!--                <span class="choose_prize">&yen;99.9</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--                <a href="goods_details.html" class="goods_img">-->
+<!--                    <img src="images/goods001.jpg"/>-->
+<!--                </a>-->
+<!--                <a href="goods_details.html" class="goods_title"><span class="own">自营</span>我是商品名称限时优惠我是商品名称限时优惠</a>-->
+<!--                <span class="choose_prize">&yen;99.9</span>-->
+<!--            </li>-->
         </ul>
     </div>
 
@@ -252,5 +276,5 @@
         </li>
     </ul>
 <?php $this->beginBlock('self_js'); ?>
-    <script type="text/javascript" src="/js/jquery.form-limit.min.js"></script>
+    <!--    <script type="text/javascript" src="/js/jquery.form-limit.min.js"></script>-->
 <?php $this->endBlock(); ?>
