@@ -26,7 +26,7 @@ class Goods extends ActiveRecord
      * @return array|ActiveRecord[]
      * 得到商品列表
      */
-    public static function getShopByType($type, $page, $limit)
+    public static function getShopByType($type, $page, $limit,$andWher=[])
     {
 
         $where = ['is_delete' => 0, 'is_alone_sale' => 1, 'is_on_sale' => 1];
@@ -35,10 +35,11 @@ class Goods extends ActiveRecord
             $where['suppliers_id'] = $type;
         }
 
-        $select = ['goods_name', 'virtual_sales', 'goods_thumb'];
+        $select = ['goods_name', 'virtual_sales', 'goods_thumb','shop_price','suppliers_id'];
 
         $list = self::find()
             ->where($where)
+            ->andWhere($andWher)
             ->orderBy('click_count desc')
             ->limit($limit)
             ->offset(($page - 1) * $limit)

@@ -24,26 +24,36 @@ class IndexController extends Controller
 
 
         //境外海淘
-        $haitao = Goods::getShopByType(2,1,3);
+        $haitao = Goods::getShopByType(2, 1, 3);
 
 
         //自营
 
-        $self = Goods::getShopByType(1,1,3);
+        $self = Goods::getShopByType(1, 1, 3);
 
         //限时优惠
-        $info = Activity::getActivity();
+        $discount = Activity::getActivity();
 
-        var_export($info);exit();
+//        var_dump($discount);exit();
 
         return $this->render('index', [
             'banner' => $banner,
-            'haitao'=>$haitao,
-            'self'=>$self
+            'haitao' => $haitao,
+            'self' => $self,
+            'discount' => $discount
         ]);
 
     }
 
+
+    public function actionType()
+    {
+
+        $list = Goods::getShopByType(0, 0, 8);
+
+        return $this->render('type',['list'=>$list]);
+
+    }
 
 
 }

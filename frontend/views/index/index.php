@@ -62,40 +62,71 @@
         </div>
     </div>
 
+
+<?php if (!empty($discount)){?>
     <!--优惠-->
     <div class="width_set discount white radius5">
         <div class="title">
             <h3>限时优惠</h3>
             <div class="endtime">
-                距结束<span>24</span>天<span>12</span>时<span>10</span>分<span>60</span>秒<span>09</span>
+                距结束<span><?=$discount['used_time']['day']?></span>天
+                <span><?=$discount['used_time']['hour']?></span>时
+                <span><?=$discount['used_time']['min']?></span>分
+                <span><?=$discount['used_time']['sec']?></span>秒
+<!--                <span>09</span>-->
             </div>
             <a href="discount_list.html" class="more">更多 &gt;</a>
         </div>
         <ul class="discount_goods">
+
+
+            <?php foreach ($discount['list'] as $k){?>
             <li>
                 <a href="goods_details.html" class="goods_img">
-                    <img src="images/goods001.jpg"/>
+                    <img src="<?=$k['goods_thumb']?>"/>
                 </a>
-                <a href="goods_details.html" class="goods_title"><span class="haitao">海淘</span>我是商品名称限时优惠我是商品名称限时优惠</a>
-                <a href="goods_details.html" class="dis_prize center-block text-center">特惠价&yen;9.9</a>
+                <a href="goods_details.html" class="goods_title"><span class="haitao">
+
+                        <?php if ($k['suppliers_id'] == 1){
+
+                            echo "自营";
+
+                        }else{
+
+                            echo "海淘";
+
+                        }?>
+
+                    </span><?=$k['goods_name']?></a>
+                <a href="goods_details.html" class="dis_prize center-block text-center">特惠价&yen;<?=$k['shop_price']?></a>
             </li>
-            <li>
-                <a href="goods_details.html" class="goods_img">
-                    <img src="images/goods001.jpg"/>
-                </a>
-                <a href="goods_details.html" class="goods_title"><span class="own">自营</span>我是商品名称限时优惠我是商品名称限时优惠</a>
-                <a href="goods_details.html" class="dis_prize center-block text-center">特惠价&yen;9.9</a>
-            </li>
-            <li>
-                <a href="goods_details.html" class="goods_img">
-                    <img src="images/goods001.jpg"/>
-                </a>
-                <a href="goods_details.html" class="goods_title"><span class="haitao">海淘</span>我是商品名称限时优惠我是商品名称限时优惠</a>
-                <a href="goods_details.html" class="dis_prize center-block text-center">特惠价&yen;9.9</a>
-            </li>
+<?php }?>
+
+
+<!--            <li>-->
+<!--                <a href="goods_details.html" class="goods_img">-->
+<!--                    <img src="images/goods001.jpg"/>-->
+<!--                </a>-->
+<!--                <a href="goods_details.html" class="goods_title"><span class="haitao">海淘</span>我是商品名称限时优惠我是商品名称限时优惠</a>-->
+<!--                <a href="goods_details.html" class="dis_prize center-block text-center">特惠价&yen;9.9</a>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--                <a href="goods_details.html" class="goods_img">-->
+<!--                    <img src="images/goods001.jpg"/>-->
+<!--                </a>-->
+<!--                <a href="goods_details.html" class="goods_title"><span class="own">自营</span>我是商品名称限时优惠我是商品名称限时优惠</a>-->
+<!--                <a href="goods_details.html" class="dis_prize center-block text-center">特惠价&yen;9.9</a>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--                <a href="goods_details.html" class="goods_img">-->
+<!--                    <img src="images/goods001.jpg"/>-->
+<!--                </a>-->
+<!--                <a href="goods_details.html" class="goods_title"><span class="haitao">海淘</span>我是商品名称限时优惠我是商品名称限时优惠</a>-->
+<!--                <a href="goods_details.html" class="dis_prize center-block text-center">特惠价&yen;9.9</a>-->
+<!--            </li>-->
         </ul>
     </div>
-
+<?php }?>
     <div class="jingwai white radius5">
         <div class="title">
             <h3>境外海淘</h3>
@@ -249,32 +280,7 @@
            style="display:none;"></i>
     </div>
 
-    <ul id="foot">
-        <li class="active">
-            <a href="index.html">
-                <img src="images/home_active.png"/>
-                <span>商城首页</span>
-            </a>
-        </li>
-        <li>
-            <a href="classification.html">
-                <img src="images/classification.png"/>
-                <span>全部分类</span>
-            </a>
-        </li>
-        <li>
-            <a href="shop_car.html">
-                <img src="images/shopping_cart.png"/>
-                <span>购物车</span>
-            </a>
-        </li>
-        <li>
-            <a href="my.html">
-                <img src="images/personal.png"/>
-                <span>个人中心</span>
-            </a>
-        </li>
-    </ul>
+
 <?php $this->beginBlock('self_js'); ?>
     <!--    <script type="text/javascript" src="/js/jquery.form-limit.min.js"></script>-->
 <?php $this->endBlock(); ?>
