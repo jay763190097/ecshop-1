@@ -104,4 +104,10 @@ class EcsCart extends \yii\db\ActiveRecord
         }
         return $date;
     }
+
+    public static function del($ids){
+
+        $res = Yii::$app->db->createCommand()->update('ecs_cart', ['is_del'=>0,'update_time'=>time()], ['in','rec_id',$ids])->execute();
+        return $res;
+    }
 }

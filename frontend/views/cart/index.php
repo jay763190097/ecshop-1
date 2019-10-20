@@ -5,6 +5,7 @@
  * Date: 2019/10/16 0016
  * Time: 22:34
  */
+use yii\helpers\Url;
 ?>
 <?php $this->beginBlock('self_css'); ?>
 
@@ -21,12 +22,12 @@
     <ul class="goodscont">
         <?php foreach ($cart_date as $key =>$value):?>
             <li>
-                <div class="imgarea">
+                <div class="imgarea" data-id = <?php echo $value['rec_id']?>>
                     <img src="/images/comment_img.jpg"/>
                 </div>
                 <div class="neirong">
                     <p><?php echo $value['goods_name']?></p>
-                    <a class="parameter" href="goods_details.html"><span><?php echo $value['goods_attr_id']?></span><img src="/images/down_car.png"/></a>
+                    <a class="parameter" href="<?php echo Url::to(['index/good?id='.$value['goods_id']]) ?>"><span><?php echo $value['goods_attr_id']?></span><img src="/images/down_car.png"/></a>
                     <div class="jiagearea">
                         <div class="prizes">
                             <span class="oldprize">&yen; <?php echo $value['market_price']?></span>
@@ -212,8 +213,29 @@
                     layer.closeAll();
                     window.location.reload();
                 },function(){
-                    layer.msg("已删除");
-                    window.location.reload();
+                    var id_check = '';
+                    $.each($('.imgarea'), function (key, val) {
+                        if($(this).attr('type') == "true"){
+                            id_check+= ','+($(this).attr('data-id'));
+                        }
+                    });
+                    var id = id_check;
+                    $.ajax({
+                        url:"/index.php/cart/index",
+                        type:"POST",
+                        dataType:"json",
+                        data:{'id':id,},
+                        success:function(res){
+                            if(res.code == 20000){
+                                layer.msg(res.message);
+                                window.location.reload();
+                            }else{
+                                layer.msg(res.message);
+                                window.location.reload();
+                            }
+                        },
+                    });
+
                 });
             }
         });
