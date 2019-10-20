@@ -52,60 +52,20 @@
             <span class="reset">充值筛选</span>
         </div>
         <div class="results_icon2">
-            <div class="condition_1">
-                <span>抛期：</span>
-                <ul class="condition_1_list">
-                    <li class="active">
-                        <span>日抛</span>
-                    </li>
-                    <li>
-                        <span>双周抛</span>
-                    </li>
-                    <li>
-                        <span>月抛</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="condition_2">
-                <span>颜色：</span>
-                <ul class="condition_1_list">
-                    <li class="active">
-                        <span>透明片</span>
-                    </li>
-                    <li>
-                        <span>黑色</span>
-                    </li>
-                    <li>
-                        <span>棕色</span>
-                    </li>
-                    <li>
-                        <span>粉色</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="condition_3">
-                <span>着色<br/>直径：</span>
-                <ul class="condition_1_list">
-                    <li class="active">
-                        <span>12.0mm</span>
-                    </li>
-                    <li>
-                        <span>12.5mm</span>
-                    </li>
-                    <li>
-                        <span>13.0mm</span>
-                    </li>
-                    <li>
-                        <span>13.5mm</span>
-                    </li>
-                    <li>
-                        <span>14.0mm</span>
-                    </li>
-                    <li>
-                        <span>非公表</span>
-                    </li>
-                </ul>
-            </div>
+
+            <?php foreach ($type_list as $k => $v) { ?>
+                <div class="condition_1">
+                    <span><?= $v['attr_name'] ?>：</span>
+                    <ul class="condition_1_list">
+                        <?php foreach ($v['attr_values'] as $key) { ?>
+                            <li data-id="<?= $v['attr_id'] ?>" data-value="<?= $key ?>">
+                                <span><?= $key ?></span>
+                            </li>
+                        <?php } ?>
+                    </ul>
+                </div>
+            <?php } ?>
+
         </div>
     </div>
 
@@ -139,15 +99,77 @@
     <!-- 0:综合；1：销量；2：新品；  -->
     <input type="hidden" id="check_type" value="0">
     <!-- 价格 desc:倒序；asc:正序；-->
-    <input type="hidden" id="price" value="desc">
+    <input type="hidden" id="price" value="0">
 
 <?php $this->beginBlock('self_js'); ?>
 
     <script>
 
+        var page=1;
+
+        var typeAttr = {};
+
+        function getList() {
+
+            var type = $("#type").val();
+
+            var check_type = $("#check_type").val();
+
+            var price_order = $("#price").val();
+
+            $.ajax({
+                url: '/index/type-list',
+                type: 'get',
+                dataType: 'json',
+                data: {
+                    type: type,
+                    check_type: check_type,
+                    price_order: price_order,
+                    typeAttr: typeAttr,
+                    page:page
+
+                }, success: function (data) {
+                    console.log(data);
+
+                    data = data['list'];
+
+                    $(".layui-icon-loading").css("display", "none");
+
+                    for (var x in data) {
+
+                        var str = '<span class=\'haitao\'>海淘</span>';
+                        if (data[x].suppliers_id == 1) {
+                            str = '<span class=\'own\'>自营</span>';
+                        }
+
+                        $(".kinds_list").append(
+                            "<li class='radius5 white'>" +
+                            "<a href='' class='goods_img'>" +
+                            "<img src='" + data[x].goods_thumb + "'/>" +
+                            "</a>" +
+                            "<a href='' class='goods_title'>" + str + data[x].goods_name + "</a>" +
+                            "<span class='choose_prize'>&yen;" + data[x].shop_price + "</span>" +
+                            "</li>")
+
+                    }
+
+                    page += 1;
+                }
+            })
+        };
+
+
         //点击综合销量新品价格;
         $(".comprehensive>li").click(function () {
             var index = $(this).index();
+
+            $("#check_type").val(index);
+            $(".kinds_list").children().remove();
+
+            if (index < 3){
+                page = 0;
+                getList();
+            }
             if (index == 0) {
                 $(this).addClass("checked");
                 $(".comprehensive>li").eq(1).removeClass("checked");
@@ -169,15 +191,21 @@
         //点击价格;
         $(".prize").click(function () {
             var type = $(this).attr("type");
+
             if (type == "false") {
+                $("#price").val('asc');
                 $(this).addClass("checked");
                 $(this).attr("type", "true");
                 $(this).find("img").attr("src", "/images/prize_up.png");
             } else if (type == "true") {
+                $("#price").val('desc');
                 $(this).removeClass("checked");
                 $(this).attr("type", "false");
                 $(this).find("img").attr("src", "/images/prize_down.png");
             }
+            $(".kinds_list").children().remove();
+            page = 0;
+            getList();
             $(".comprehensive>li").eq(0).removeClass("checked");
             $(".comprehensive>li").eq(1).removeClass("checked");
             $(".comprehensive>li").eq(2).removeClass("checked");
@@ -188,8 +216,10 @@
             var index = $(this).index();
 
             $("#type").val(index);
-
+            $(".kinds_list").children().remove();
             $(this).addClass("active").siblings("li").removeClass("active");
+            page = 0;
+            getList();
         });
 
         //点击筛选;
@@ -209,15 +239,40 @@
                     $(".screen").find("img").attr("src", "/images/screen_up.png");
                 }
             }
+
         });
 
         //点击抛期;
         $(".condition_1_list>li").on("click", function () {
+
+
+            var attr_id = $(this).attr('data-id');
+            var attr_value = $(this).attr('data-value');
+
             if ($(this).hasClass("active")) {
                 $(this).removeClass("active");
+
+                // typeAttr[attr_id].remove(attr_value);
+                removeByValue(typeAttr[attr_id], attr_value);
+
+                if (typeAttr[attr_id].length < 1) {
+                    delete typeAttr[attr_id];
+                }
+
             } else {
                 $(this).addClass("active");
+
+                if (typeAttr[attr_id] == undefined) {
+                    typeAttr[attr_id] = [];
+                }
+                typeAttr[attr_id].push(attr_value);
+
             }
+            $(".kinds_list").children().remove();
+            page = 0;
+            getList();
+            console.log(typeAttr);
+
         });
 
         //屏幕滚动到底部加载更多;
@@ -226,35 +281,28 @@
                 console.log("到底了");
                 $(".layui-icon-loading").css("display", "block");
 
-                $.ajax({
-                    url: '',
-                    type: 'get',
-                    dataType: 'json',
-                    data: {
-
-                        type:$("#type").val(),
-
-                    }, success: function (data) {
-                        console.log(data);
-
-                        $(".layui-icon-loading").css("display", "none");
-                        for (var i = 0; i < 2; i++) {
-                            $(".kinds_list").append(
-                                "<li class='radius5 white'>" +
-                                "<a href='' class='goods_img'>" +
-                                "<img src='images/goods001.jpg'/>" +
-                                "</a>" +
-                                "<a href='' class='goods_title'><span class='haitao'>海淘</span>我是商品名称限时优惠我是商品名称限时优惠</a>" +
-                                "<span class='choose_prize'>&yen;99.9</span>" +
-                                "</li>"
-                            )
-                        }
-
-                    }
-                });
+                // getList();
 
             }
         });
+
+        function removeByValue(arr, val) {
+
+            for (var i = 0; i < arr.length; i++) {
+
+                if (arr[i] == val) {
+
+                    arr.splice(i, 1);
+
+                    break;
+
+                }
+
+            }
+
+            return arr;
+
+        }
 
     </script>
 
