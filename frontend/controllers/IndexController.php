@@ -113,6 +113,8 @@ class IndexController extends Controller
 //        typeAttr      筛选属性
         $typeAttr = $request->get('typeAttr');
 
+        $goods_name_value = $request->get('goods_name');
+
         $goods_name = Goods::tableName();
 
         $where = [];
@@ -160,7 +162,12 @@ class IndexController extends Controller
 
         }
 
-        $info = Goods::getTypeAll($page, $where, $andWhere, $order);
+        $like = [];
+        if (!empty($goods_name_value)){
+            $like = ['like',$goods_name.'.goods_name',$goods_name_value];
+        }
+
+        $info = Goods::getTypeAll($page, $where, $andWhere, $order,$like);
 
         return json_encode($info);
 

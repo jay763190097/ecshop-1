@@ -102,7 +102,7 @@ class Goods extends ActiveRecord
     }
 
 
-    public static function getTypeAll($page, $where, $andWhere, $order)
+    public static function getTypeAll($page, $where, $andWhere, $order,$like)
     {
 
         $table_name = self::tableName();//商品表
@@ -117,6 +117,7 @@ class Goods extends ActiveRecord
                 $table_name . '.is_alone_sale' => 1,
                 $table_name . '.is_delete' => 0,
             ])
+            ->andWhere($like)
             ->andWhere($where)
             ->andWhere($andWhere)
             ->join('join', $goodsAttr_name, $goodsAttr_name . '.goods_id=' . $table_name . '.goods_id')

@@ -6,7 +6,7 @@
     <header id="head">
         <div class="search_icon white radius50">
             <img src="/images/search.png"/>
-            <input type="text" placeholder="搜索商品" value="" name="goods_name" class="goods_name"/>
+            <input type="search" placeholder="搜索商品" value="" name="goods_name"  class="goods_name"/>
         </div>
     </header>
     <ul class="classfi">
@@ -117,6 +117,8 @@
 
             var price_order = $("#price").val();
 
+            var goods_name = $(".goods_name").val();
+
             $.ajax({
                 url: '/index/type-list',
                 type: 'get',
@@ -126,7 +128,8 @@
                     check_type: check_type,
                     price_order: price_order,
                     typeAttr: typeAttr,
-                    page:page
+                    page:page,
+                    goods_name:goods_name
 
                 }, success: function (data) {
                     console.log(data);
@@ -158,6 +161,12 @@
             })
         };
 
+        $(".goods_name").keyup(function () {
+            page = 0;
+            $(".kinds_list").children().remove();
+            getList();
+
+        });
 
         //点击综合销量新品价格;
         $(".comprehensive>li").click(function () {
