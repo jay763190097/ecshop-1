@@ -23,12 +23,33 @@ class LoginController extends Controller
         $request = Yii::$app->request;
         if($request->isPost){
             Yii::$app->response->format=Response::FORMAT_JSON;
-            $mobile_phone = $request->post('new_phone2');
-            if(self::Is_mobile($mobile_phone)){
+            $date = $request->post();
+            if($date['type'] == 'code'){
+                $mobile_phone = $request->post('new_phone2');
+                if(self::Is_mobile($mobile_phone)){
 
+                }else{
+                    return ['code'=>'3000','message'=> '该手机号码不合法'];
+                }
             }else{
-                return ['code'=>'3000','message'=> '该手机号码不合法'];
+                if(self::Is_mobile($date['new_phone3'])){
+                    $user_date = EcsUsers::find()->andWhere(['mobile_phone'=>$date['new_phone3']])->asArray()->one();
+                    if($user_date){
+                        if($user_date['password'] == md5($date['password_val'])){
+                            yii::$app->session['user_date']=$user_date;
+                            return ['code'=>'20000','message'=>'登录成功！'];
+                        }else{
+                            return ['code'=>'50000','message'=>'密码错误！'];
+                        }
+                    }else{
+                        return ['code'=>'50000','message'=>'用户不存在，请通过验证码登录！'];
+                    }
+                }else{
+                    return ['code'=>'50000','message'=> '该手机号码不合法'];
+                }
+
             }
+
         }
         return $this->render('login');
     }

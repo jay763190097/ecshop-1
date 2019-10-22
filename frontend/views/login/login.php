@@ -26,11 +26,12 @@
         <input type="password" placeholder="请输入密码" class="password_val"/>
         <span class="open_closed" type="false"><img src="/images/close.png"/></span>
     </div>
-    <button type="button" class="getnewcode no_password_login_btn" disabled="disabled">获取验证码</button>
+    <button type="button" class="getnewcode no_password_login_btn" disabled="disabled">登录</button>
 
 </div>
 <?php $this->beginBlock('self_js'); ?>
 <script src="/js/common.js"></script>
+<!--<script src="/js/md5.js"></script>-->
 <script>
     layui.use(['layer'],function(){
         var layer=layui.layer;
@@ -51,7 +52,7 @@
                 url:"/index.php/login/login",
                 type:"POST",
                 dataType:"json",
-                data:{'new_phone2':new_phone2,},
+                data:{new_phone2:new_phone2,type:'code'},
                 success:function(res){
                     console.log(res);
                     return false;
@@ -118,6 +119,28 @@
                 $(".no_password_login_btn").attr("disabled","disabled").css("opacity","0.5");
             }
         });
+
+        $('.getnewcode').click(function () {
+            var  new_phone3=$(".new_phone3").val();
+            var password_val = $(".password_val").val();
+            // password_val =  $.md5(password_val);
+            // console.log(password_val);
+            // return false
+            $.ajax({
+                url:"/index.php/login/login",
+                type:"POST",
+                dataType:"json",
+                data:{new_phone3:new_phone3,password_val:password_val,type:'password'},
+                success:function(res){
+                    if(res.code == 20000){
+                        layer.msg(res.message);
+                        history.go(-1)
+                    }else{
+                        layer.msg(res.message);
+                    }
+                },
+            });
+        })
 
     });
 </script>
