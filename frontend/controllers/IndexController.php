@@ -119,20 +119,20 @@ class IndexController extends Controller
 
         $where = [];
 
-        $order = $goods_name.'.add_time desc';
+        $order = $goods_name . '.add_time desc';
 
         if (!empty($type)) {
             $where [$goods_name . '.suppliers_id'] = $type;
         }
 
         if (!empty($price_order)) {
-            $order = $goods_name.'.shop_price '.$price_order;
+            $order = $goods_name . '.shop_price ' . $price_order;
         } else {
 
             switch ($check_type) {
                 case 1:
                     //销量
-                    $order = $goods_name.'.virtual_sales desc';
+                    $order = $goods_name . '.virtual_sales desc';
                     break;
                 case 2:
 //                新品
@@ -152,8 +152,8 @@ class IndexController extends Controller
             foreach ($typeAttr as $k => $v) {
                 $type_where = [];
                 $type_where = ['and'];
-                $type_where[] =[$goodsAttr_name . '.attr_id' => $k];
-                $type_where[] =[$goodsAttr_name . '.attr_value' => $v];
+                $type_where[] = [$goodsAttr_name . '.attr_id' => $k];
+                $type_where[] = [$goodsAttr_name . '.attr_value' => $v];
 
                 $andWhere[] = $type_where;
 
@@ -163,13 +163,24 @@ class IndexController extends Controller
         }
 
         $like = [];
-        if (!empty($goods_name_value)){
-            $like = ['like',$goods_name.'.goods_name',$goods_name_value];
+        if (!empty($goods_name_value)) {
+            $like = ['like', $goods_name . '.goods_name', $goods_name_value];
         }
 
-        $info = Goods::getTypeAll($page, $where, $andWhere, $order,$like);
+        $info = Goods::getTypeAll($page, $where, $andWhere, $order, $like);
 
         return json_encode($info);
+
+    }
+
+    /**
+     *  商品详情
+     */
+    public function actionShop()
+    {
+
+        $id = \Yii::$app->request->get('id');
+
 
     }
 

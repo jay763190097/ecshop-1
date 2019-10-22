@@ -75,7 +75,7 @@
                 <span><?= $discount['used_time']['sec'] ?></span>秒
                 <!--                <span>09</span>-->
             </div>
-            <a href="discount_list.html" class="more">更多 &gt;</a>
+            <a href="/list/discount" class="more">更多 &gt;</a>
         </div>
         <ul class="discount_goods">
 
@@ -349,7 +349,7 @@
                 $(".kinds_list").children().remove();
 
                 page = 0;
-                getList(type);
+                // getList(type);
 
             });
 

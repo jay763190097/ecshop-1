@@ -170,4 +170,11 @@ class Goods extends ActiveRecord
 
     }
 
+
+    public static function getGoodsInfoById($id){
+
+
+
+    }
+
 }
