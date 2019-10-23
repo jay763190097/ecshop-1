@@ -35,15 +35,33 @@ class ListController extends Controller
 
             $page = $request->get('page');
 
-            $shop_ids = array_slice($shop_ids,($page-1) * 10,10)
+            $shop_ids = array_slice($shop_ids, ($page - 1) * 10, 10);
 
-            $data = Goods::getShopByTypePage(0,1,10,['in',Goods::tableName().'.goods_id',,$shop_ids]);
+            $data = Goods::getShopByTypePage(0, 1, 10, ['in', Goods::tableName() . '.goods_id', $shop_ids]);
 
             return json_encode($data);
 
         }
 
-        return $this->render('discount', ['info'=>$info]);
+        return $this->render('discount', ['info' => $info]);
+
+    }
+
+
+    public function actionShop()
+    {
+
+        $id = \Yii::$app->request->get('id');
+
+        $info = Goods::getGoodsInfoById($id);
+
+        $image_list = Goods::getGoodsImage($id);
+
+
+        return $this->render('shop', [
+            'image_list' => $image_list,
+            'info' => $info
+        ]);
 
     }
 }

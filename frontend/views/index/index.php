@@ -82,10 +82,10 @@
 
             <?php foreach ($discount['list'] as $k) { ?>
                 <li>
-                    <a href="goods_details.html" class="goods_img">
+                    <a href="/list/shop?id=<?=$k['goods_id']?>" class="goods_img">
                         <img src="<?= $k['goods_thumb'] ?>"/>
                     </a>
-                    <a href="goods_details.html" class="goods_title"><span class="haitao">
+                    <a href="/list/shop?id=<?=$k['goods_id']?>" class="goods_title"><span class="haitao">
 
                         <?php if ($k['suppliers_id'] == 1) {
 
@@ -98,7 +98,7 @@
                         } ?>
 
                     </span><?= $k['goods_name'] ?></a>
-                    <a href="goods_details.html"
+                    <a href="/list/shop?id=<?=$k['goods_id']?>"
                        class="dis_prize center-block text-center">特惠价&yen;<?= $k['shop_price'] ?></a>
                 </li>
             <?php } ?>
@@ -139,10 +139,10 @@
 
             <?php foreach ($haitao as $k) { ?>
                 <li>
-                    <a href="goods_details.html" class="goods_img">
+                    <a href="/list/shop?id=<?=$k['goods_id']?>" class="goods_img">
                         <img src="<?= $k['goods_thumb'] ?>"/>
                     </a>
-                    <a href="goods_details.html" class="goods_title"><span
+                    <a href="/list/shop?id=<?=$k['goods_id']?>" class="goods_title"><span
                                 class="haitao">海淘</span><?= $k['goods_name'] ?></a>
                     <span class="choose_prize">&yen;<?= $k['shop_price'] ?></span>
                 </li>
@@ -182,10 +182,10 @@
 
             <?php foreach ($self as $k) { ?>
                 <li>
-                    <a href="goods_details.html" class="goods_img">
+                    <a href="/list/shop?id=<?=$k['goods_id']?>" class="goods_img">
                         <img src="<?= $k['goods_thumb'] ?>"/>
                     </a>
-                    <a href="goods_details.html" class="goods_title"><span class="own">自营</span><?= $k['goods_name'] ?>
+                    <a href="/list/shop?id=<?=$k['goods_id']?>" class="goods_title"><span class="own">自营</span><?= $k['goods_name'] ?>
                     </a>
                     <span class="choose_prize">&yen;<?= $k['shop_price'] ?></span>
                 </li>
@@ -314,10 +314,10 @@
 
                             $(".kinds_list").append(
                                 "<li class='radius5 white'>" +
-                                "<a href='' class='goods_img'>" +
+                                "<a href='/list/index?id="+data[x].goods_id+"' class='goods_img'>" +
                                 "<img src='"+ data[x].goods_thumb +"'/>" +
                                 "</a>" +
-                                "<a href='' class='goods_title'>"+ str +data[x].goods_name+"</a>" +
+                                "<a href='/list/index?id="+data[x].goods_id+"' class='goods_title'>"+ str +data[x].goods_name+"</a>" +
                                 "<span class='choose_prize'>&yen;"+ data[x].shop_price+"</span>" +
                                 "</li>"
                             )

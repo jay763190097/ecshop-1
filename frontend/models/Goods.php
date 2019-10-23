@@ -35,7 +35,7 @@ class Goods extends ActiveRecord
             $where['suppliers_id'] = $type;
         }
 
-        $select = ['goods_name', 'virtual_sales', 'goods_thumb', 'shop_price', 'suppliers_id'];
+        $select = ['goods_id','goods_name', 'virtual_sales', 'goods_thumb', 'shop_price', 'suppliers_id'];
 
         $list = self::find()
             ->where($where)
@@ -74,7 +74,7 @@ class Goods extends ActiveRecord
             $where['suppliers_id'] = $type;
         }
 
-        $select = ['goods_name', 'virtual_sales', 'goods_thumb', 'shop_price', 'suppliers_id'];
+        $select = ['goods_id','goods_name', 'virtual_sales', 'goods_thumb', 'shop_price', 'suppliers_id'];
 
         $list = self::find()
             ->where($where)
@@ -109,7 +109,7 @@ class Goods extends ActiveRecord
 
         $goodsAttr_name = GoodsAttr::tableName();//商品属性表
 
-        $select = [$table_name.'.goods_name', $table_name.'.virtual_sales', $table_name.'.goods_thumb', $table_name.'.shop_price', $table_name.'.suppliers_id'];
+        $select = [$table_name.'.goods_id',$table_name.'.goods_name', $table_name.'.virtual_sales', $table_name.'.goods_thumb', $table_name.'.shop_price', $table_name.'.suppliers_id'];
 
 
         $list = self::find()
@@ -170,10 +170,45 @@ class Goods extends ActiveRecord
 
     }
 
+    /**
+     * @param $id
+     * @return array|ActiveRecord[]
+     * 得到某个商品的图片
+     */
+    public static function getGoodsImage($id){
+        //商品图片
+        $image_list = GoodsImage::find()->where(['goods_id'=>$id])->select(['img_url img'])->asArray()->all();
+
+        foreach ($image_list as $k=>$v){
+
+            $image_list[$k]['img'] = \Yii::$app->params['admin_url'] .'/'. $v['img'];
+
+        }
+
+        return $image_list;
+
+    }
+
 
     public static function getGoodsInfoById($id){
 
+        $table_name = self::tableName();
 
+        $type_name = Category::tableName();
+
+        $attr_name = GoodsAttr::tableName();
+
+
+        $select = [$type_name.'.filter_attr',$table_name.'.goods_desc',$table_name.'.goods_id',$table_name.'.goods_name',$table_name.'.is_promote',$table_name.'.bonus_type_id'];
+
+        $info = self::find()
+            ->where([$table_name.'.goods_id'=>$id,$type_name.'.is_show'=>1])
+            ->join('join',$type_name,$type_name.'.cat_id='.$table_name.'.cat_id')
+            ->select($select)
+            ->asArray()
+            ->one();
+
+        return $info;
 
     }
 
