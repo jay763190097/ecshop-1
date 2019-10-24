@@ -6,6 +6,9 @@ namespace frontend\controllers;
 
 use frontend\method\Method;
 use frontend\models\Activity;
+use frontend\models\Attribute;
+use frontend\models\Collect;
+use frontend\models\Comment;
 use frontend\models\Goods;
 use frontend\models\GoodsAttr;
 use frontend\models\TypeAttr;
@@ -48,6 +51,10 @@ class ListController extends Controller
     }
 
 
+    /**
+     * @return string
+     * 商品详情
+     */
     public function actionShop()
     {
 
@@ -57,11 +64,102 @@ class ListController extends Controller
 
         $image_list = Goods::getGoodsImage($id);
 
+        $attr = Attribute::getGoodsAttrName($id);
+
+        $attr_list = implode(',', array_column($attr, 'attr_name'));
+
+        $is_collect = Collect::getUserCollectById($id);
+
+        $comment = Comment::getDataList($id, 1, []);
+
+//        var_export($comment);exit();
 
         return $this->render('shop', [
             'image_list' => $image_list,
-            'info' => $info
+            'info' => $info,
+            'attr_list' => $attr_list,
+            'attr' => $attr,
+            'is_collect' => $is_collect,
+            'comment'=>$comment
         ]);
 
     }
+
+    /**
+     * @return false|string
+     * @throws \yii\db\Exception
+     * 收藏/取消收藏
+     */
+    public function actionCollect()
+    {
+
+//        if (\Yii::$app->session->has('user_date')) {
+//            return json_encode(['code' => 0, 'msg' => '您还未登录']);
+//        }
+//
+//        $user_id = \Yii::$app->session->get('user_date')['user_id'];
+
+        $user_id = 3;
+
+        $data = \Yii::$app->request->get();
+
+        switch ($data['type']) {
+            case 0:
+                $flag = Collect::cancelCollect($user_id, $data['goods_id']);
+
+                if ($flag) {
+                    return json_encode(['code' => 1, 'msg' => '取消收藏成功']);
+                } else {
+                    return json_encode(['code' => 1, 'msg' => '取消收藏成功']);
+                }
+
+                break;
+            case 1:
+                $flag = Collect::addCollect($user_id, $data['goods_id']);
+
+                if ($flag) {
+                    return json_encode(['code' => 1, 'msg' => '取消收藏成功']);
+                } else {
+                    return json_encode(['code' => 1, 'msg' => '取消收藏成功']);
+                }
+
+                break;
+        }
+
+    }
+
+
+    /**
+     *  评论列表
+     */
+    public function actionEvaluateList()
+    {
+
+        $goods_id = \Yii::$app->session->get('goods_id');
+
+        $page = \Yii::$app->session->get('page', 1);
+
+        $type = \Yii::$app->session->get('type', 0);
+
+        $andWhere = [];
+
+        $table_name = Comment::tableName();
+
+        switch ($type) {
+            case 1:
+                $andWhere = ['>', $table_name . '.comment_rank', 3];
+                break;
+            case 2:
+                $andWhere = ['<', $table_name . '.comment_rank', 3];
+                break;
+            case 3:
+                $andWhere = ['<>', $table_name . '.image', 0];
+                break;
+        }
+
+        $list = Comment::getDataList($goods_id, $page, $andWhere);
+
+        return json_encode($list);
+    }
+
 }

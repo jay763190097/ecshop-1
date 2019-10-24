@@ -196,10 +196,19 @@ class Goods extends ActiveRecord
 
         $type_name = Category::tableName();
 
-        $attr_name = GoodsAttr::tableName();
-
-
-        $select = [$type_name.'.filter_attr',$table_name.'.goods_desc',$table_name.'.goods_id',$table_name.'.goods_name',$table_name.'.is_promote',$table_name.'.bonus_type_id'];
+        $select = [
+            $type_name.'.filter_attr',
+            $table_name.'.goods_desc',
+            $table_name.'.goods_number',
+            $table_name.'.goods_id',
+            $table_name.'.goods_name',
+            $table_name.'.is_promote',
+            $table_name.'.bonus_type_id',
+            $table_name.'.promote_price',//促销价
+            $table_name.'.shop_price',//实际售价
+            $table_name.'.is_promote',//是否特价促销；0，否；1，是
+            $table_name.'.goods_id'
+        ];
 
         $info = self::find()
             ->where([$table_name.'.goods_id'=>$id,$type_name.'.is_show'=>1])
@@ -207,6 +216,13 @@ class Goods extends ActiveRecord
             ->select($select)
             ->asArray()
             ->one();
+
+
+        $info['price'] = $info['shop_price'];
+
+        if ($info['is_promote'] == 1){
+            $info['price'] = $info['promote_price'];
+        }
 
         return $info;
 
