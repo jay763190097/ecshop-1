@@ -72,15 +72,14 @@ class ListController extends Controller
 
         $comment = Comment::getDataList($id, 1, []);
 
-//        var_export($comment);exit();
-
         return $this->render('shop', [
             'image_list' => $image_list,
             'info' => $info,
             'attr_list' => $attr_list,
             'attr' => $attr,
             'is_collect' => $is_collect,
-            'comment'=>$comment
+            'comment'=>$comment,
+            'image_url'=>\Yii::$app->params['admin_url'],
         ]);
 
     }
@@ -135,11 +134,11 @@ class ListController extends Controller
     public function actionEvaluateList()
     {
 
-        $goods_id = \Yii::$app->session->get('goods_id');
+        $goods_id = \Yii::$app->request->get('goods_id');
 
-        $page = \Yii::$app->session->get('page', 1);
+        $page = \Yii::$app->request->get('page', 1);
 
-        $type = \Yii::$app->session->get('type', 0);
+        $type = \Yii::$app->request->get('type', 0);
 
         $andWhere = [];
 
@@ -153,7 +152,7 @@ class ListController extends Controller
                 $andWhere = ['<', $table_name . '.comment_rank', 3];
                 break;
             case 3:
-                $andWhere = ['<>', $table_name . '.image', 0];
+                $andWhere = ['<>', $table_name . '.image', '0'];
                 break;
         }
 

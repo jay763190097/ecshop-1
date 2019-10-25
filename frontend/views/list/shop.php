@@ -4,6 +4,7 @@
 
 <?php $this->endBlock(); ?>
     <input type="hidden" id="goods_id" value="<?= $info['goods_id'] ?>">
+    <input type="hidden" id="image_url" value="<?=$image_url?>">
     <span class="back"></span>
     <div class="swiper-container swiper-003">
         <div class="swiper-wrapper">
@@ -72,8 +73,6 @@
     </ul>
     <div class="three_icons">
         <div class="icons_left">
-            <!--            <img src="/images/details.jpg"/>-->
-
             <?= $info['goods_desc'] ?>
         </div>
         <div class="icons_center">
@@ -427,10 +426,102 @@
 
         });
 
+
+        var page = 1;
+        var eva = 0;
         //点击全部、高分等等;
         $(".comment>li").click(function () {
+
+            eva = $(this).index();
+            page = 1;
             $(this).addClass("active").siblings("li").removeClass("active");
+            getEvaluate();
         });
+
+
+        function getEvaluate(){
+
+            $.ajax({
+                url:'/list/evaluate-list',
+                type:'get',
+                dataType:'json',
+                data:{
+                    goods_id:$("#goods_id").val(),
+                    page:page,
+                    type:eva
+                },
+                success:function (data) {
+                    console.log(data);
+                    page += 1;
+
+
+                    html = '';
+                    for (var x in data){
+
+                        html +=              "<li>" +
+                                    "<div class='star_block'>" +
+                                    "<span>"+ data[x].user_name+"</span>" +
+                                    "<ul>";
+
+                        
+                        var image = '';
+                        
+                        for (var i=0;i<data[x].comment_rank;i++){
+
+                            image += "<li>"+
+                                "<img src='/images/good_star.png'/>" +
+                                "</li>";
+
+                        }
+
+                        html += image;
+
+                                    html +="</ul>" +
+                                    "</div>" +
+                                    "<p>"+ data[x].content +"</p>";
+
+
+                        image = '';
+
+                        if (data[x].image !=0){
+                            var url = $("#image_url").val();
+                            image += "<ul class='images_area'>";
+
+                            for (var y in data[x].image){
+
+                                var str = url + '/' +data[x].image[y].replace(/\\/g, "");
+
+                                image +="<li>" +
+                                    "<img src='"+ str +"'/>" +
+                                    "</li>";
+
+                            }
+
+                            image += "</ul>";
+
+
+                        }
+
+                                    html += image;
+
+                                    html +="<div class='dates'>" +
+                                    // "<span>2019-06-22购买,</span>" +
+                                    "<span>"+ data[x].add_time+"发表</span>" +
+                                    "</div>" +
+                                    "</li>"
+
+
+
+                    }
+
+                    $(".comment_content").children().remove();
+                    $(".comment_content").append(html);
+
+                }
+            })
+
+
+        }
 
         //滚动屏幕加载评论;
         $(window).scroll(function (event) {
@@ -439,55 +530,60 @@
                     console.log("到底了");
                     $(".layui-icon-loading").css("display", "block");
                     //ajax请求省略;
-                    setTimeout(function () {
-                        $(".layui-icon-loading").css("display", "none");
-                        for (var i = 0; i < 2; i++) {
 
-                            //模拟假数据;
 
-                            $(".comment_content").append(
-                                "<li>" +
-                                "<div class='star_block'>" +
-                                "<span>王***</span>" +
-                                "<ul>" +
-                                "<li>" +
-                                "<img src='images/good_star.png'/>" +
-                                "</li>" +
-                                "<li>" +
-                                "<img src='images/good_star.png'/>" +
-                                "</li>" +
-                                "<li>" +
-                                "<img src='images/good_star.png'/>" +
-                                "</li>" +
-                                "<li>" +
-                                "<img src='images/good_star.png'/>" +
-                                "</li>" +
-                                "<li>" +
-                                "<img src='images/good_star.png'/>" +
-                                "</li>" +
-                                "</ul>" +
-                                "</div>" +
-                                "<p>人体所需要的营养物质主要通过一日三餐获得，零食只能是一种补充，因此零食不能无节制地吃许多儿童零食不离口，走路时吃、做作业时吃、看电视时吃、聊天时还吃。当进食食物达到一定数量后，胃部就会出现饱足感。我们对食物就不会再有欲望。</p>" +
-                                "<ul class='images_area'>" +
-                                "<li>" +
-                                "<img src='images/comment_img.jpg'/>" +
-                                "</li>" +
-                                "<li>" +
-                                "<img src='images/comment_img.jpg'/>" +
-                                "</li>" +
-                                "<li>" +
-                                "<img src='images/comment_img.jpg'/>" +
-                                "</li>" +
-                                "</ul>" +
-                                "<div class='dates'>" +
-                                "<span>2019-06-22购买,</span>" +
-                                "<span>2019-07-10发表</span>" +
-                                "</div>" +
-                                "</li>"
-                            )
-                            $(".three_icons").css("height", $(".icons_center").height());
-                        }
-                    }, 1000);
+getEvaluate();
+
+
+                    // setTimeout(function () {
+                    //     $(".layui-icon-loading").css("display", "none");
+                    //     for (var i = 0; i < 2; i++) {
+                    //
+                    //         //模拟假数据;
+                    //
+                    //         $(".comment_content").append(
+                    //             "<li>" +
+                    //             "<div class='star_block'>" +
+                    //             "<span>王***</span>" +
+                    //             "<ul>" +
+                    //             "<li>" +
+                    //             "<img src='images/good_star.png'/>" +
+                    //             "</li>" +
+                    //             "<li>" +
+                    //             "<img src='images/good_star.png'/>" +
+                    //             "</li>" +
+                    //             "<li>" +
+                    //             "<img src='images/good_star.png'/>" +
+                    //             "</li>" +
+                    //             "<li>" +
+                    //             "<img src='images/good_star.png'/>" +
+                    //             "</li>" +
+                    //             "<li>" +
+                    //             "<img src='images/good_star.png'/>" +
+                    //             "</li>" +
+                    //             "</ul>" +
+                    //             "</div>" +
+                    //             "<p>人体所需要的营养物质主要通过一日三餐获得，零食只能是一种补充，因此零食不能无节制地吃许多儿童零食不离口，走路时吃、做作业时吃、看电视时吃、聊天时还吃。当进食食物达到一定数量后，胃部就会出现饱足感。我们对食物就不会再有欲望。</p>" +
+                    //             "<ul class='images_area'>" +
+                    //             "<li>" +
+                    //             "<img src='images/comment_img.jpg'/>" +
+                    //             "</li>" +
+                    //             "<li>" +
+                    //             "<img src='images/comment_img.jpg'/>" +
+                    //             "</li>" +
+                    //             "<li>" +
+                    //             "<img src='images/comment_img.jpg'/>" +
+                    //             "</li>" +
+                    //             "</ul>" +
+                    //             "<div class='dates'>" +
+                    //             "<span>2019-06-22购买,</span>" +
+                    //             "<span>2019-07-10发表</span>" +
+                    //             "</div>" +
+                    //             "</li>"
+                    //         )
+                    //         $(".three_icons").css("height", $(".icons_center").height());
+                    //     }
+                    // }, 1000);
                 }
             }
         });
