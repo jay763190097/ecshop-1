@@ -19,6 +19,10 @@ class LoginController extends Controller
 
     public $url = 'http://47.111.117.79:88';
 
+    /**
+     * 登录
+     * @return array|string
+     */
     public function actionLogin(){
         $request = Yii::$app->request;
         if($request->isPost){
@@ -54,6 +58,31 @@ class LoginController extends Controller
         return $this->render('login');
     }
 
+    public function actionForgotPassword(){
+        return $this->render('forgotpassword');
+    }
+    /**
+     * 退出登录
+     * @return array
+     */
+    public function actionOutlogin(){
+        $request = Yii::$app->request;
+        if($request->isPost){
+            Yii::$app->response->format=Response::FORMAT_JSON;
+            $user_id = $request->post('user_id');
+            Yii::$app->session->remove('user_date');
+            $date = [
+                'last_login'=>time()
+            ];
+            $bool = EcsUsers::edit($date,$user_id);
+            if($bool){
+                return ['code'=>'20000','message'=>'退出成功！'];
+            }else{
+                return ['code'=>'50000','message'=> '退出失败！'];
+            }
+
+        }
+    }
     //判断手机号码的合法性
     public static function Is_mobile($phoneNumber)
     {
@@ -63,4 +92,6 @@ class LoginController extends Controller
             return false;
         }
     }
+
+
 }
