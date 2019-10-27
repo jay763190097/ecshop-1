@@ -254,30 +254,54 @@ class ListController extends Controller
      * @return false|string
      * 添加购物车
      */
-    public function actionAddCar(){
+    public function actionAddCar()
+    {
 
 
-        if (\Yii::$app->session->has('user_date')) {
-            return json_encode(['code' => 0, 'msg' => '您还未登录']);
-        }
+//        if (!\Yii::$app->session->has('user_date')) {
+//            return json_encode(['code' => 0, 'msg' => '您还未登录']);
+//        }
 
         $data = \Yii::$app->request->get();
 
-        if (empty($data['attr_id'])){
+        if (empty($data['attr_id'])) {
 
-            return json_encode(['code'=>0,'msg'=>'请选择商品规格']);
+            return json_encode(['code' => 0, 'msg' => '请选择商品规格']);
 
         }
 
-        $user_id = \Yii::$app->session->get('user_date')['user_id'];
+//        $user_id = \Yii::$app->session->get('user_date')['user_id'];
+        $user_id = 1;
+
+        $goods = Goods::findOne(['goods_id' => $data['goods_id']]);
+
+        $attr_id = explode(',',$data['attr_id']);
+
+        $type_attr_id = GoodsAttr::findOne(['goods_attr_id'=>$attr_id])['attr_id'];
 
         $date = [
-
-            'user_id'=>$user_id,
-            'goods_id'=>$data['goods_id'],
-            'goods_attr_id'=>$data['attr_id'],
-
+            'user_id' => $user_id,
+            'goods_id' => $data['goods_id'],
+            'goods_attr_id' => $data['attr_id'],
+            'goods_attr' => $type_attr_id,
+            'goods_number' => $data['num']
         ];
+
+        if ($goods['is_promote'] == 1 && time() < $goods['promote_start_date'] && time() > $goods['promote_end_date']) {
+            $date['goods_price'] = $goods['promote_price'];
+            $date['market_price'] = $goods['shop_price'];
+        } else {
+            $date['goods_price'] = $goods['shop_price'];
+            $date['market_price'] = $goods['market_price'];
+        }
+
+        $flag = \Yii::$app->db->createCommand()->insert('ecs_cart',$date)->execute();
+
+        if ($flag){
+            return json_encode(['code'=>1,'msg'=>'加入成功']);
+        }else{
+            return json_encode(['code'=>0,'msg'=>'加入失败']);
+        }
 
     }
 

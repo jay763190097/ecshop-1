@@ -750,14 +750,17 @@
                         dataType: 'json',
                         data: {
                             goods_id: $("#goods_id").val(),
-                            attr_id: attr_ids
+                            attr_id: attr_ids,
+                            num:$(".goods_number").val()
                         }, success: function (data) {
-
+                            if (data.code == 0){
+                                layer.msg(data.msg);
+                            } else{
+                                layer.msg("成功添加到购物车");
+                            }
                         }
                     });
 
-
-                    layer.msg("成功添加到购物车");
                 } else if (type == "2") {
                     window.location.href = "pay.html";
                 }
