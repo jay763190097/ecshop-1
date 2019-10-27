@@ -33,7 +33,7 @@
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
                     <a href="">
-                        <img src="images/goods001.jpg/" class="news_img"/>
+                        <img src="/images/goods001.jpg" class="news_img"/>
                         <div class="info">
                             <h3>11国庆发货安排通知</h3>
                             <p>09月29日后货物延后至10月08日发货</p>
@@ -42,7 +42,7 @@
                 </div>
                 <div class="swiper-slide">
                     <a href="">
-                        <img src="images/goods001.jpg/" class="news_img"/>
+                        <img src="/images/goods001.jpg" class="news_img"/>
                         <div class="info">
                             <h3>22国庆发货安排通知</h3>
                             <p>09月29日后货物延后至10月08日发货</p>
@@ -51,7 +51,7 @@
                 </div>
                 <div class="swiper-slide">
                     <a href="">
-                        <img src="images/goods001.jpg/" class="news_img"/>
+                        <img src="/images/goods001.jpg" class="news_img"/>
                         <div class="info">
                             <h3>33国庆发货安排通知</h3>
                             <p>09月29日后货物延后至10月08日发货</p>

@@ -35,7 +35,7 @@ class Goods extends ActiveRecord
             $where['suppliers_id'] = $type;
         }
 
-        $select = ['goods_id','goods_name', 'virtual_sales', 'goods_thumb', 'shop_price', 'suppliers_id'];
+        $select = ['goods_id', 'goods_name', 'virtual_sales', 'goods_thumb', 'shop_price', 'suppliers_id'];
 
         $list = self::find()
             ->where($where)
@@ -74,7 +74,7 @@ class Goods extends ActiveRecord
             $where['suppliers_id'] = $type;
         }
 
-        $select = ['goods_id','goods_name', 'virtual_sales', 'goods_thumb', 'shop_price', 'suppliers_id'];
+        $select = ['goods_id', 'goods_name', 'virtual_sales', 'goods_thumb', 'shop_price', 'suppliers_id'];
 
         $list = self::find()
             ->where($where)
@@ -102,14 +102,14 @@ class Goods extends ActiveRecord
     }
 
 
-    public static function getTypeAll($page, $where, $andWhere, $order,$like)
+    public static function getTypeAll($page, $where, $andWhere, $order, $like)
     {
 
         $table_name = self::tableName();//商品表
 
         $goodsAttr_name = GoodsAttr::tableName();//商品属性表
 
-        $select = [$table_name.'.goods_id',$table_name.'.goods_name', $table_name.'.virtual_sales', $table_name.'.goods_thumb', $table_name.'.shop_price', $table_name.'.suppliers_id'];
+        $select = [$table_name . '.goods_id', $table_name . '.goods_name', $table_name . '.virtual_sales', $table_name . '.goods_thumb', $table_name . '.shop_price', $table_name . '.suppliers_id'];
 
 
         $list = self::find()
@@ -125,7 +125,7 @@ class Goods extends ActiveRecord
             ->offset(($page - 1) * 10)
             ->orderBy($order)
             ->select($select)
-            ->groupBy($table_name.'.goods_id')
+            ->groupBy($table_name . '.goods_id')
             ->asArray()
             ->all();
 
@@ -156,7 +156,7 @@ class Goods extends ActiveRecord
             ->andWhere($where)
             ->andWhere($andWhere)
             ->join('join', $goodsAttr_name, $goodsAttr_name . '.goods_id=' . $table_name . '.goods_id')
-            ->groupBy($table_name.'.goods_id')
+            ->groupBy($table_name . '.goods_id')
             ->count();
 
 
@@ -175,13 +175,14 @@ class Goods extends ActiveRecord
      * @return array|ActiveRecord[]
      * 得到某个商品的图片
      */
-    public static function getGoodsImage($id){
+    public static function getGoodsImage($id)
+    {
         //商品图片
-        $image_list = GoodsImage::find()->where(['goods_id'=>$id])->select(['img_url img'])->asArray()->all();
+        $image_list = GoodsImage::find()->where(['goods_id' => $id])->select(['img_url img'])->asArray()->all();
 
-        foreach ($image_list as $k=>$v){
+        foreach ($image_list as $k => $v) {
 
-            $image_list[$k]['img'] = \Yii::$app->params['admin_url'] .'/'. $v['img'];
+            $image_list[$k]['img'] = \Yii::$app->params['admin_url'] . '/' . $v['img'];
 
         }
 
@@ -190,29 +191,35 @@ class Goods extends ActiveRecord
     }
 
 
-    public static function getGoodsInfoById($id){
+    /**
+     * @param $id
+     * @return array|ActiveRecord|null
+     * 商品下详情
+     */
+    public static function getGoodsInfoById($id)
+    {
 
         $table_name = self::tableName();
 
         $type_name = Category::tableName();
 
         $select = [
-            $type_name.'.filter_attr',
-            $table_name.'.goods_desc',
-            $table_name.'.goods_number',
-            $table_name.'.goods_id',
-            $table_name.'.goods_name',
-            $table_name.'.is_promote',
-            $table_name.'.bonus_type_id',
-            $table_name.'.promote_price',//促销价
-            $table_name.'.shop_price',//实际售价
-            $table_name.'.is_promote',//是否特价促销；0，否；1，是
-            $table_name.'.goods_id'
+            $type_name . '.filter_attr',
+            $table_name . '.goods_desc',
+            $table_name . '.goods_number',
+            $table_name . '.goods_id',
+            $table_name . '.goods_name',
+            $table_name . '.is_promote',
+            $table_name . '.bonus_type_id',
+            $table_name . '.promote_price',//促销价
+            $table_name . '.shop_price',//实际售价
+            $table_name . '.is_promote',//是否特价促销；0，否；1，是
+            $table_name . '.goods_id'
         ];
 
         $info = self::find()
-            ->where([$table_name.'.goods_id'=>$id,$type_name.'.is_show'=>1])
-            ->join('join',$type_name,$type_name.'.cat_id='.$table_name.'.cat_id')
+            ->where([$table_name . '.goods_id' => $id, $type_name . '.is_show' => 1])
+            ->join('join', $type_name, $type_name . '.cat_id=' . $table_name . '.cat_id')
             ->select($select)
             ->asArray()
             ->one();
@@ -220,11 +227,47 @@ class Goods extends ActiveRecord
 
         $info['price'] = $info['shop_price'];
 
-        if ($info['is_promote'] == 1){
+        if ($info['is_promote'] == 1) {
             $info['price'] = $info['promote_price'];
         }
 
         return $info;
+
+    }
+
+
+    /**
+     * @param $goods_id
+     * 得到一个商品的商品红包
+     */
+    public static function getRedListByGoodsId($goods_id)
+    {
+
+        $table_name = self::tableName();
+
+        $red_name = RedType::tableName();
+
+        $select = [
+
+            $red_name.'.type_id',
+            $red_name.'.type_money',//红包金额
+            $red_name.'.send_type',//红包类型
+            $red_name.'.min_amount',//订单最小金额
+            $red_name.'.use_start_date',//红包使用开始时间
+            $red_name.'.use_end_date',//红包使用结束时间
+            $red_name.'.min_goods_amount',//可以使用该红包的商品的最低价格,即只要达到该价格商品才可以使用红包
+
+        ];
+
+        $info = self::find()
+            ->where([$table_name . '.goods_id' => $goods_id])
+            ->join('join', $red_name, $red_name . '.type_id=' . $table_name . '.bonus_type_id')
+            ->select($select)
+            ->asArray()
+            ->one();
+
+        return $info;
+
 
     }
 

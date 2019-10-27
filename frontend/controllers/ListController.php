@@ -11,7 +11,9 @@ use frontend\models\Collect;
 use frontend\models\Comment;
 use frontend\models\Goods;
 use frontend\models\GoodsAttr;
+use frontend\models\RedType;
 use frontend\models\TypeAttr;
+use frontend\models\UserRed;
 use yii\web\Controller;
 
 class ListController extends Controller
@@ -78,8 +80,8 @@ class ListController extends Controller
             'attr_list' => $attr_list,
             'attr' => $attr,
             'is_collect' => $is_collect,
-            'comment'=>$comment,
-            'image_url'=>\Yii::$app->params['admin_url'],
+            'comment' => $comment,
+            'image_url' => \Yii::$app->params['admin_url'],
         ]);
 
     }
@@ -159,6 +161,124 @@ class ListController extends Controller
         $list = Comment::getDataList($goods_id, $page, $andWhere);
 
         return json_encode($list);
+    }
+
+
+    /**
+     *  优惠券列表
+     */
+    public function actionRedList()
+    {
+
+        if (\Yii::$app->session->has('user_date')) {
+            return json_encode(['code' => 0, 'msg' => '您还未登录']);
+        }
+
+        $goods_id = \Yii::$app->request->get('goods_id');
+
+//        $user_id = \Yii::$app->session->get('user_date')['user_id'];
+        $user_id = 1;
+
+        //我的红包
+        $user_list = UserRed::getDataByUserId($user_id);
+
+        //商品红包
+        $goods_red_info = Goods::getRedListByGoodsId($goods_id);
+
+        //订单红包
+        $red_list = RedType::getDataAll();
+
+        array_push($red_list, $goods_red_info);
+
+        foreach ($red_list as $k => $v) {
+
+            $red_list[$k]['use_start_date'] = date('Y-m-d', $v['use_start_date']);
+            $red_list[$k]['use_end_date'] = date('Y-m-d', $v['use_end_date']);
+
+            if (in_array($v['type_id'], $user_list)) {
+                $red_list[$k]['is_has'] = 1;
+            } else {
+                $red_list[$k]['is_has'] = 0;
+            }
+
+            switch ($v['send_type']) {
+                case 1:
+                    $red_list[$k]['min_amount'] = $v['min_goods_amount'];
+                    break;
+                case 2:
+                    $red_list[$k]['min_amount'] = $v['min_amount'];
+                    break;
+            }
+
+        }
+
+        return json_encode(['code' => 1, 'data' => $red_list]);
+
+
+    }
+
+
+    /**
+     *  领取优惠券
+     */
+    public function actionGetRed()
+    {
+
+        $type_id = \Yii::$app->request->get('type_id');
+
+//        $user_id = \Yii::$app->session->get('user_date')['user_id'];
+        $user_id = 1;
+
+        $user_list = UserRed::getDataByUserId($user_id);
+
+        if (in_array($type_id, $user_list)) {
+            return json_encode(['code' => 0, 'msg' => '您已经领过该优惠券']);
+        }
+
+        $flag = \Yii::$app->db->createCommand()->insert(UserRed::tableName(),
+            [
+                'bonus_type_id' => $type_id,
+                'user_id' => $user_id,
+            ]
+        )->execute();
+
+        if ($flag) {
+            return json_encode(['code' => 1, 'msg' => '领取成功']);
+        } else {
+            return json_encode(['code' => 0, 'msg' => '领取失败']);
+        }
+
+    }
+
+    /**
+     * @return false|string
+     * 添加购物车
+     */
+    public function actionAddCar(){
+
+
+        if (\Yii::$app->session->has('user_date')) {
+            return json_encode(['code' => 0, 'msg' => '您还未登录']);
+        }
+
+        $data = \Yii::$app->request->get();
+
+        if (empty($data['attr_id'])){
+
+            return json_encode(['code'=>0,'msg'=>'请选择商品规格']);
+
+        }
+
+        $user_id = \Yii::$app->session->get('user_date')['user_id'];
+
+        $date = [
+
+            'user_id'=>$user_id,
+            'goods_id'=>$data['goods_id'],
+            'goods_attr_id'=>$data['attr_id'],
+
+        ];
+
     }
 
 }
