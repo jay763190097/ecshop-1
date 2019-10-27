@@ -68,6 +68,36 @@ class Method
         ];
     }
 
+    /**PHP 计算两个时间戳之间相差的时间
+     * 功能：计算两个时间戳之间相差的日时分秒
+     * @param $begin_time  开始时间戳
+     * @param $end_time  结束时间戳
+     * @return array
+     */
+    public static function timediff($begin_time, $end_time)
+    {
+        if ($begin_time < $end_time) {
+            $starttime = $begin_time;
+            $endtime = $end_time;
+        } else {
+            $starttime = $end_time;
+            $endtime = $begin_time;
+        }
+        //计算天数
+        $timediff = $endtime - $starttime;
+        $days = intval($timediff / 86400);
+        //计算小时数
+        $remain = $timediff % 86400;
+        $hours = intval($remain / 3600);
+        //计算分钟数
+        $remain = $remain % 3600;
+        $mins = intval($remain / 60);
+        //计算秒数
+        $secs = $remain % 60;
+        $res = array("day" => $days, "hour" => $hours, "min" => $mins, "sec" => $secs);
+        return $res;
+    }
+
     /**
      * 返回两个时间的相距时间，*年*月*日*时*分*秒
      * @param int $one_time 时间一

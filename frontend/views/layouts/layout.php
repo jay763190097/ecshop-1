@@ -44,7 +44,32 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 
 <?= $content ?>
-
+<ul id="foot">
+    <li class="active">
+        <a href="/index/index">
+            <img src="/images/home_active.png"/>
+            <span>商城首页</span>
+        </a>
+    </li>
+    <li>
+        <a href="/index/type">
+            <img src="/images/classification.png"/>
+            <span>全部分类</span>
+        </a>
+    </li>
+    <li>
+        <a href="shop_car.html">
+            <img src="/images/shopping_cart.png"/>
+            <span>购物车</span>
+        </a>
+    </li>
+    <li>
+        <a href="my.html">
+            <img src="/images/personal.png"/>
+            <span>个人中心</span>
+        </a>
+    </li>
+</ul>
 <?php $this->endBody() ?>
 </body>
 

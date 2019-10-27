@@ -9,11 +9,12 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
-        'urlManager' => [
+        'urlManager' => [                //设置pathinfo模式
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
     ],
+
 ];
