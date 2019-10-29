@@ -112,18 +112,23 @@ class Goods extends ActiveRecord
     public static function getIndexShopList($type, $page, $limit, $andWher = [])
     {
 
-        $where = ['is_delete' => 0, 'is_alone_sale' => 1, 'is_on_sale' => 1];
+        $goods_attr = GoodsAttr::tableName();
+
+        $goods_name = self::tableName();
+
+        $where = [$goods_name . '.is_delete' => 0, $goods_name . '.is_alone_sale' => 1, $goods_name . '.is_on_sale' => 1];
 
         if (!empty($type)) {
-            $where['suppliers_id'] = $type;
+            $where[$goods_name . '.suppliers_id'] = $type;
         }
 
-        $select = ['goods_id', 'goods_name', 'virtual_sales', 'goods_thumb', 'shop_price', 'suppliers_id'];
+        $select = [$goods_name . '.goods_id', $goods_name . '.goods_name', $goods_name . '.virtual_sales', $goods_name . '.goods_thumb', $goods_name . '.shop_price', $goods_name . '.suppliers_id'];
 
         $list = self::find()
             ->where($where)
             ->andWhere($andWher)
-            ->orderBy('click_count desc')
+            ->join('join', $goods_attr, $goods_attr . '.goods_id=' . $goods_name . '.goods_id')
+            ->orderBy($goods_name . '.click_count desc')
             ->limit($limit)
             ->offset(($page - 1) * $limit)
             ->select($select)
@@ -268,6 +273,18 @@ class Goods extends ActiveRecord
             ->asArray()
             ->one();
 
+        $url = \Yii::$app->params['admin_url'];
+        $info['goods_desc'] = htmlspecialchars_decode($info['goods_desc']);
+
+        preg_match_all('/<img src="(.*?)"/i', $info['goods_desc'], $match);
+
+        if (!empty($match[1])) {
+            foreach ($match[1] as $key => $val) {
+                if (strpos($val, 'http') === false) {
+                    $info = str_replace($val, $url . $val, $info);
+                }
+            }
+        }
 
         $info['price'] = $info['shop_price'];
 
@@ -293,13 +310,13 @@ class Goods extends ActiveRecord
 
         $select = [
 
-            $red_name.'.type_id',
-            $red_name.'.type_money',//红包金额
-            $red_name.'.send_type',//红包类型
-            $red_name.'.min_amount',//订单最小金额
-            $red_name.'.use_start_date',//红包使用开始时间
-            $red_name.'.use_end_date',//红包使用结束时间
-            $red_name.'.min_goods_amount',//可以使用该红包的商品的最低价格,即只要达到该价格商品才可以使用红包
+            $red_name . '.type_id',
+            $red_name . '.type_money',//红包金额
+            $red_name . '.send_type',//红包类型
+            $red_name . '.min_amount',//订单最小金额
+            $red_name . '.use_start_date',//红包使用开始时间
+            $red_name . '.use_end_date',//红包使用结束时间
+            $red_name . '.min_goods_amount',//可以使用该红包的商品的最低价格,即只要达到该价格商品才可以使用红包
 
         ];
 

@@ -27,13 +27,15 @@
 
     <div class="news white radius5">
         <div class="news_L pull-left">
-            <img src="/images/news.png"/>
+            <a href="information.html">
+                <img src="/images/news.png"/>
+            </a>
         </div>
         <div class="swiper-container swiper-002">
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
-                    <a href="">
-                        <img src="/images/goods001.jpg" class="news_img"/>
+                    <a href="information_details.html">
+                        <img src="/images/goods001.jpg/" class="news_img"/>
                         <div class="info">
                             <h3>11国庆发货安排通知</h3>
                             <p>09月29日后货物延后至10月08日发货</p>
@@ -41,8 +43,8 @@
                     </a>
                 </div>
                 <div class="swiper-slide">
-                    <a href="">
-                        <img src="/images/goods001.jpg" class="news_img"/>
+                    <a href="information_details.html">
+                        <img src="/images/goods001.jpg/" class="news_img"/>
                         <div class="info">
                             <h3>22国庆发货安排通知</h3>
                             <p>09月29日后货物延后至10月08日发货</p>
@@ -50,8 +52,8 @@
                     </a>
                 </div>
                 <div class="swiper-slide">
-                    <a href="">
-                        <img src="/images/goods001.jpg" class="news_img"/>
+                    <a href="information_details.html">
+                        <img src="/images/goods001.jpg/" class="news_img"/>
                         <div class="info">
                             <h3>33国庆发货安排通知</h3>
                             <p>09月29日后货物延后至10月08日发货</p>
@@ -293,7 +295,7 @@
 
             //点击搜索;
             $(".search_icon").click(function () {
-                window.location.href = "search.html";
+                window.location.href = "/index/search";
             });
 
             //点击切换精选等;

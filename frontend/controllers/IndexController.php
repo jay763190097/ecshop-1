@@ -59,18 +59,27 @@ class IndexController extends Controller
 
         //type 0:精品；1：日抛；2：双周抛；3：月抛；4：透明片
 
+
+        $goods_name = Goods::tableName();
+
+        $goods_attr = GoodsAttr::tableName();
+
         $andWhere = [];
         switch ($type) {
             case 0:
-                $andWhere = ['is_best' => 1];
+                $andWhere = [$goods_name.'.is_best' => 1];
                 break;
             case 1:
+                $andWhere = [$goods_attr.'.attr_value' => '日抛'];
                 break;
             case 2:
+                $andWhere = [$goods_attr.'.attr_value' => '双周抛'];
                 break;
             case 3:
+                $andWhere = [$goods_attr.'.attr_value' => '月抛'];
                 break;
             case 4:
+                $andWhere = [$goods_attr.'.attr_value' => '透明片'];
                 break;
             default:
 
@@ -85,15 +94,20 @@ class IndexController extends Controller
     public function actionType()
     {
 
+        $goods_name = \Yii::$app->request->get('goods_name');
+
         $type_list = TypeAttr::getDataByTypeId();
 
-        $list = Goods::getShopByType(0, 0, 8);
+        $list = Goods::getShopByType(0, 0, 8,['like', Goods::tableName() . '.goods_name', $goods_name]);
 
         return $this->render('type', ['list' => $list, 'type_list' => $type_list]);
 
     }
 
-
+    /**
+     * @return false|string
+     * 筛选
+     */
     public function actionTypeList()
     {
 
@@ -158,8 +172,6 @@ class IndexController extends Controller
                 $andWhere[] = $type_where;
 
             }
-
-
         }
 
         $like = [];
@@ -174,13 +186,11 @@ class IndexController extends Controller
     }
 
     /**
-     *  商品详情
+     *  搜索
      */
-    public function actionShop()
-    {
+    public function actionSearch(){
 
-        $id = \Yii::$app->request->get('id');
-
+        return $this->render('search');
 
     }
 
