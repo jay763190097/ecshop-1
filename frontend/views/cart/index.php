@@ -22,12 +22,12 @@ use yii\helpers\Url;
     <ul class="goodscont">
         <?php foreach ($cart_date as $key =>$value):?>
             <li>
-                <div class="imgarea" data-id = <?php echo $value['rec_id']?>>
+                <div class="imgarea" data-good-id = "<?php echo $value['goods_id']?>" data-id = "<?php echo $value['rec_id']?>"">
                     <img src="/images/comment_img.jpg"/>
                 </div>
                 <div class="neirong">
                     <p><?php echo $value['goods_name']?></p>
-                    <a class="parameter" href="<?php echo Url::to(['index/good?id='.$value['goods_id']]) ?>"><span><?php echo $value['goods_attr_id']?></span><img src="/images/down_car.png"/></a>
+                    <a class="parameter" href="<?php echo Url::to(['index/shop?id='.$value['goods_id']]) ?>"><span><?php echo $value['goods_attr'].'分类：'.$value['goods_attr_id']?></span><img src="/images/down_car.png"/></a>
                     <div class="jiagearea">
                         <div class="prizes">
                             <span class="oldprize">&yen; <?php echo $value['market_price']?></span>
@@ -66,8 +66,8 @@ use yii\helpers\Url;
             <span>合计：</span>
         </div>
     </li>
-    <li class="zhifumoney">
-	    		<span class="fukuannum">
+    <li class="zhifumoney" >
+	    		<span class="fukuannum" id="settlement">
 	    			结算 (<i>0</i>)
 	    		</span>
     </li>
@@ -240,6 +240,46 @@ use yii\helpers\Url;
             }
         });
     });
+
+    //点击结算;
+    $(".fukuannum").click(function(){
+        var howmanynum=$(".goodscont").find(".selectmoren").length;
+        if(howmanynum==0){
+            layer.msg("请选中商品");
+        }else{
+            layer.confirm('确认结算该商品？', {
+                btn: ['取消','确定'] //按钮
+            },function(){
+                layer.closeAll();
+                window.location.reload();
+            },function(){
+                var id_check = '';
+                var good_num = "";
+                var arr = new Array();;
+                $.each($('.imgarea'), function (key, val) {
+                    if($(this).attr('type') == "true"){
+                        // id_check+= ','+($(this).attr('data-id'));
+                        // good_num+= ','+$(this).parents("li").find("input").val();
+                        arr.push({'good_id':$(this).attr('data-good-id'),'good_num':$(this).parents("li").find("input").val(),'cart_id':$(this).attr('data-id')});
+                    }
+                });
+                var id = id_check;
+                var date = JSON.stringify( arr )
+                window.location.href="/order/pay?type=2&date="+date;
+            });
+
+        }
+    });
+
+        // var id_check = '';
+        // $.each($('.imgarea'), function (key, val) {
+        //     if($(this).attr('type') == "true"){
+        //         id_check+= ','+($(this).attr('data-id'));
+        //     }
+        // });
+        // if(id_check == ''){
+        //
+        // }
 </script>
 <!--    <script type="text/javascript" src="/js/jquery.form-limit.min.js"></script>-->
 <?php $this->endBlock(); ?>

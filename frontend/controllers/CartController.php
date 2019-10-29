@@ -43,9 +43,8 @@ class CartController extends Controller
         //获取当前登录者的信息
         $user_name = Yii::$app->session['user_date'];
         //根据用户id查询购物车表
-        $user_id = $user_name['id'];
+        $user_id = $user_name['user_id'];
         $cart_date = EcsCart::cartdate($user_id);
-
         return $this->render('index',['cart_date'=>$cart_date]);
     }
 

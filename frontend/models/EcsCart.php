@@ -97,6 +97,7 @@ class EcsCart extends \yii\db\ActiveRecord
                 ->all();
 
         foreach ($date as $key=>$value){
+            $date[$key]['goods_attr'] = EcsAttribute::find()->andWhere(['attr_id'=>$value['goods_attr']])->asArray()->one()['attr_name'];
             $attr_id = explode(",", $value['goods_attr_id']);
             $attrdate = EcsGoodAttr::find()->select('attr_value')->andWhere(['in','goods_attr_id',$attr_id])->asArray()->all();
             $attrdate = array_column($attrdate, 'attr_value');
@@ -105,9 +106,45 @@ class EcsCart extends \yii\db\ActiveRecord
         return $date;
     }
 
+    /**
+     * 删除购物车信息
+     * @param $ids
+     * @return int
+     * @throws \yii\db\Exception
+     */
     public static function del($ids){
-
         $res = Yii::$app->db->createCommand()->update('ecs_cart', ['is_del'=>0,'update_time'=>time()], ['in','rec_id',$ids])->execute();
         return $res;
+    }
+
+    /**
+     * 购物车生出订单信息
+     * @param $cart_id
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public static function good_date($cart_id){
+        $date = self::find()
+            ->select('ecs_cart.*,ecs_goods.goods_thumb')
+            ->join('left join','ecs_goods','ecs_goods.goods_id = ecs_cart.goods_id')
+            ->andWhere(['ecs_cart.rec_id'=>$cart_id,'ecs_cart.is_del'=>1])
+            ->asArray()
+            ->one();
+
+        $date['goods_attr'] = EcsAttribute::find()->andWhere(['attr_id'=>$date['goods_attr']])->asArray()->one()['attr_name'];
+        $attr_id = explode(",", $date['goods_attr_id']);
+        $attrdate = EcsGoodAttr::find()->select('attr_value')->andWhere(['in','goods_attr_id',$attr_id])->asArray()->all();
+        $attrdate = array_column($attrdate, 'attr_value');
+        $date['goods_attr_id'] = implode(',',$attrdate);
+
+        $res_date = [
+            'goods_id'=>$date['goods_id'],
+            'goods_name'=>$date['goods_name'],
+            'goods_price'=>$date['goods_price'],
+            'market_price'=>$date['market_price'],
+            'goods_attr'=>$date['goods_attr'],
+            'goods_attr_id'=>$date['goods_attr_id'],
+            'goods_thumb'=>$date['goods_thumb']
+        ];
+        return $res_date;
     }
 }
