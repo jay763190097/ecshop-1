@@ -235,48 +235,7 @@
         </ul>
 
         <ul class="discount_goods kinds_list">
-<!--            <li class="radius5 white">-->
-<!--                <a href="goods_details.html" class="goods_img">-->
-<!--                    <img src="images/goods001.jpg"/>-->
-<!--                </a>-->
-<!--                <a href="goods_details.html" class="goods_title"><span class="haitao">海淘</span>我是商品名称限时优惠我是商品名称限时优惠</a>-->
-<!--                <span class="choose_prize">&yen;99.9</span>-->
-<!--            </li>-->
-<!--            <li class="radius5 white">-->
-<!--                <a href="goods_details.html" class="goods_img">-->
-<!--                    <img src="images/goods001.jpg"/>-->
-<!--                </a>-->
-<!--                <a href="goods_details.html" class="goods_title"><span class="own">自营</span>我是商品名称限时优惠我是商品名称限时优惠</a>-->
-<!--                <span class="choose_prize">&yen;99.9</span>-->
-<!--            </li>-->
-<!--            <li class="radius5 white">-->
-<!--                <a href="goods_details.html" class="goods_img">-->
-<!--                    <img src="images/goods001.jpg"/>-->
-<!--                </a>-->
-<!--                <a href="goods_details.html" class="goods_title"><span class="haitao">海淘</span>我是商品名称限时优惠我是商品名称限时优惠</a>-->
-<!--                <span class="choose_prize">&yen;99.9</span>-->
-<!--            </li>-->
-<!--            <li class="radius5 white">-->
-<!--                <a href="goods_details.html" class="goods_img">-->
-<!--                    <img src="images/goods001.jpg"/>-->
-<!--                </a>-->
-<!--                <a href="goods_details.html" class="goods_title"><span class="own">自营</span>我是商品名称限时优惠我是商品名称限时优惠</a>-->
-<!--                <span class="choose_prize">&yen;99.9</span>-->
-<!--            </li>-->
-<!--            <li class="radius5 white">-->
-<!--                <a href="goods_details.html" class="goods_img">-->
-<!--                    <img src="images/goods001.jpg"/>-->
-<!--                </a>-->
-<!--                <a href="goods_details.html" class="goods_title"><span class="own">自营</span>我是商品名称限时优惠我是商品名称限时优惠</a>-->
-<!--                <span class="choose_prize">&yen;99.9</span>-->
-<!--            </li>-->
-<!--            <li class="radius5 white">-->
-<!--                <a href="goods_details.html" class="goods_img">-->
-<!--                    <img src="images/goods001.jpg"/>-->
-<!--                </a>-->
-<!--                <a href="goods_details.html" class="goods_title"><span class="haitao">海淘</span>我是商品名称限时优惠我是商品名称限时优惠</a>-->
-<!--                <span class="choose_prize">&yen;99.9</span>-->
-<!--            </li>-->
+
         </ul>
         <i class="layui-icon layui-icon-loading layui-anim layui-anim-rotate layui-anim-loop text-center"
            style="display:none;"></i>
@@ -314,10 +273,10 @@
 
                             $(".kinds_list").append(
                                 "<li class='radius5 white'>" +
-                                "<a href='/list/index?id="+data[x].goods_id+"' class='goods_img'>" +
+                                "<a href='/list/shop?id="+data[x].goods_id+"' class='goods_img'>" +
                                 "<img src='"+ data[x].goods_thumb +"'/>" +
                                 "</a>" +
-                                "<a href='/list/index?id="+data[x].goods_id+"' class='goods_title'>"+ str +data[x].goods_name+"</a>" +
+                                "<a href='/list/shop?id="+data[x].goods_id+"' class='goods_title'>"+ str +data[x].goods_name+"</a>" +
                                 "<span class='choose_prize'>&yen;"+ data[x].shop_price+"</span>" +
                                 "</li>"
                             )
