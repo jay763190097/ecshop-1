@@ -135,86 +135,6 @@
 
                 <?php } ?>
 
-                <!--                <li>-->
-                <!--                    <div class="star_block">-->
-                <!--                        <span>王***</span>-->
-                <!--                        <ul>-->
-                <!--                            <li>-->
-                <!--                                <img src="images/good_star.png"/>-->
-                <!--                            </li>-->
-                <!--                            <li>-->
-                <!--                                <img src="images/good_star.png"/>-->
-                <!--                            </li>-->
-                <!--                            <li>-->
-                <!--                                <img src="images/good_star.png"/>-->
-                <!--                            </li>-->
-                <!--                            <li>-->
-                <!--                                <img src="images/bad_star.png"/>-->
-                <!--                            </li>-->
-                <!--                            <li>-->
-                <!--                                <img src="images/bad_star.png"/>-->
-                <!--                            </li>-->
-                <!--                        </ul>-->
-                <!--                    </div>-->
-                <!--                    <p>-->
-                <!--                        人体所需要的营养物质主要通过一日三餐获得，零食只能是一种补充，因此零食不能无节制地吃许多儿童零食不离口，走路时吃、做作业时吃、看电视时吃、聊天时还吃。当进食食物达到一定数量后，胃部就会出现饱足感。我们对食物就不会再有欲望。-->
-                <!--                    </p>-->
-                <!--                    <ul class="images_area">-->
-                <!--                        <li>-->
-                <!--                            <img src="/images/comment_img.jpg"/>-->
-                <!--                        </li>-->
-                <!--                        <li>-->
-                <!--                            <img src="images/comment_img.jpg"/>-->
-                <!--                        </li>-->
-                <!--                        <li>-->
-                <!--                            <img src="images/comment_img.jpg"/>-->
-                <!--                        </li>-->
-                <!--                    </ul>-->
-                <!--                    <div class="dates">-->
-                <!--                        <span>2019-06-22购买,</span>-->
-                <!--                        <span>2019-07-10发表</span>-->
-                <!--                    </div>-->
-                <!--                </li>-->
-                <!--                <li>-->
-                <!--                    <div class="star_block">-->
-                <!--                        <span>王***</span>-->
-                <!--                        <ul>-->
-                <!--                            <li>-->
-                <!--                                <img src="/images/good_star.png"/>-->
-                <!--                            </li>-->
-                <!--                            <li>-->
-                <!--                                <img src="/images/good_star.png"/>-->
-                <!--                            </li>-->
-                <!--                            <li>-->
-                <!--                                <img src="/images/good_star.png"/>-->
-                <!--                            </li>-->
-                <!--                            <li>-->
-                <!--                                <img src="/images/bad_star.png"/>-->
-                <!--                            </li>-->
-                <!--                            <li>-->
-                <!--                                <img src="/images/bad_star.png"/>-->
-                <!--                            </li>-->
-                <!--                        </ul>-->
-                <!--                    </div>-->
-                <!--                    <p>-->
-                <!--                        人体所需要的营养物质主要通过一日三餐获得，零食只能是一种补充，因此零食不能无节制地吃许多儿童零食不离口，走路时吃、做作业时吃、看电视时吃、聊天时还吃。当进食食物达到一定数量后，胃部就会出现饱足感。我们对食物就不会再有欲望。-->
-                <!--                    </p>-->
-                <!--                    <ul class="images_area">-->
-                <!--                        <li>-->
-                <!--                            <img src="/images/comment_img.jpg"/>-->
-                <!--                        </li>-->
-                <!--                        <li>-->
-                <!--                            <img src="/images/comment_img.jpg"/>-->
-                <!--                        </li>-->
-                <!--                        <li>-->
-                <!--                            <img src="/images/comment_img.jpg"/>-->
-                <!--                        </li>-->
-                <!--                    </ul>-->
-                <!--                    <div class="dates">-->
-                <!--                        <span>2019-06-22购买,</span>-->
-                <!--                        <span>2019-07-10发表</span>-->
-                <!--                    </div>-->
-                <!--                </li>-->
             </ul>
             <i class="layui-icon layui-icon-loading layui-anim layui-anim-rotate layui-anim-loop text-center"
                style="display:none;"></i>
@@ -258,36 +178,7 @@
             优惠券
         </div>
         <ul class="Coupon_lists">
-            <!--            <li>-->
-            <!--                <div class="add_cou">-->
-            <!--                    <div class="cou_list_L">-->
-            <!--                        <span>&yen;<i>100</i></span>-->
-            <!--                        <span>满599元可用</span>-->
-            <!--                    </div>-->
-            <!--                    <div class="cou_list_R">-->
-            <!--                        <p>国庆随机奖励限量优惠活动专用,平台全品类(优惠商品除外)</p>-->
-            <!--                        <div>-->
-            <!--                            <span>2019.09.30-2019.10.08</span>-->
-            <!--                            <span class="quick_get">立即领取&gt; </span>-->
-            <!--                        </div>-->
-            <!--                    </div>-->
-            <!--                </div>-->
-            <!--            </li>-->
-            <!--            <li>-->
-            <!--                <div class="add_cou">-->
-            <!--                    <div class="cou_list_L">-->
-            <!--                        <span>&yen;<i>100</i></span>-->
-            <!--                        <span>满599元可用</span>-->
-            <!--                    </div>-->
-            <!--                    <div class="cou_list_R">-->
-            <!--                        <p>国庆随机奖励限量优惠活动专用,平台全品类(优惠商品除外)</p>-->
-            <!--                        <div>-->
-            <!--                            <span>2019.09.30-2019.10.08</span>-->
-            <!--                            <span class="to_use">立即使用&gt; </span>-->
-            <!--                        </div>-->
-            <!--                    </div>-->
-            <!--                </div>-->
-            <!--            </li>-->
+
         </ul>
         <button type="button" class="finish">完成</button>
     </div>
@@ -733,16 +624,17 @@
                 $(".Specifications_block").animate({
                     "bottom": "-7rem"
                 }, 300);
+
+
+                var attr_ids = '';
+                $(".Specifications_block_002").each(function () {
+
+                    var attr_id = $(this).children('ul').children('.active').attr('data-id');
+
+                    attr_ids += ',' + attr_id;
+                });
+
                 if (type == '1') {
-
-
-                    var attr_ids = '';
-                    $(".Specifications_block_002").each(function () {
-
-                        var attr_id = $(this).children('ul').children('.active').attr('data-id');
-
-                        attr_ids += ',' + attr_id;
-                    });
 
                     $.ajax({
                         url: '/list/add-car',
@@ -762,7 +654,9 @@
                     });
 
                 } else if (type == "2") {
+
                     window.location.href = "pay.html";
+
                 }
             });
 

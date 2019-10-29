@@ -284,7 +284,8 @@ class ListController extends Controller
             'goods_id' => $data['goods_id'],
             'goods_attr_id' => $data['attr_id'],
             'goods_attr' => $type_attr_id,
-            'goods_number' => $data['num']
+            'goods_number' => $data['num'],
+            'goods_name'=>$goods['name']
         ];
 
         if ($goods['is_promote'] == 1 && time() < $goods['promote_start_date'] && time() > $goods['promote_end_date']) {

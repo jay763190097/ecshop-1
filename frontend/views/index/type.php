@@ -49,7 +49,7 @@
     <div class="results_block">
         <div class="results_icon1">
             <span>符合条件共<i>300</i>件商品</span>
-            <span class="reset">充值筛选</span>
+            <span class="reset">重置筛选</span>
         </div>
         <div class="results_icon2">
 
@@ -74,10 +74,10 @@
 
             <?php foreach ($list as $k) { ?>
                 <li class="radius5 white">
-                    <a href="goods_details.html" class="goods_img">
+                    <a href="/list/shop?id=<?=$k['goods_id']?>" class="goods_img">
                         <img src="<?= $k['goods_thumb'] ?>"/>
                     </a>
-                    <a href="goods_details.html" class="goods_title">
+                    <a href="/list/shop?id=<?=$k['goods_id']?>" class="goods_title">
 
                         <?php if ($k['suppliers_id'] == 1) {
                             echo "<span class=\"own\">自营</span>";
@@ -147,10 +147,10 @@
 
                         $(".kinds_list").append(
                             "<li class='radius5 white'>" +
-                            "<a href='' class='goods_img'>" +
+                            "<a href='/list/shop?id="+data[x].goods_id+"' class='goods_img'>" +
                             "<img src='" + data[x].goods_thumb + "'/>" +
                             "</a>" +
-                            "<a href='' class='goods_title'>" + str + data[x].goods_name + "</a>" +
+                            "<a href='/list/shop?id="+data[x].goods_id+"' class='goods_title'>" + str + data[x].goods_name + "</a>" +
                             "<span class='choose_prize'>&yen;" + data[x].shop_price + "</span>" +
                             "</li>")
 

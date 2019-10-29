@@ -18,6 +18,21 @@ class IndexController extends Controller
 
     public $url = 'http://47.111.117.79:88';
 
+    public function actionCe(){
+
+
+        define('IN_ECS','aaa');
+        include 'sms/cls_sms.php';
+
+        $sms = new \sms();
+
+        $flag = $sms->send('17623640359','aaaaaaaaaaaaaaaaa');
+
+        var_dump($flag);
+
+    }
+
+
     public function actionIndex()
     {
 
