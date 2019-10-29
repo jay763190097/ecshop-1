@@ -60,6 +60,9 @@ class ListController extends Controller
     public function actionShop()
     {
 
+
+        \Yii::$app->session->set('user_date',['user_id'=>1]);
+
         $id = \Yii::$app->request->get('id');
 
         $info = Goods::getGoodsInfoById($id);

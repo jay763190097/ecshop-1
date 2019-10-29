@@ -655,7 +655,18 @@
 
                 } else if (type == "2") {
 
-                    window.location.href = "pay.html";
+
+                    var goods_id = $("#goods_id").val();
+
+                    var good_num = $(".goods_number").val();
+
+                    var good_attr = '211';
+
+
+                    var url = '/order/pay?type=good&goods_id='+goods_id+'&good_num='+good_num+'&good_attr='+good_attr+"&good_attr_id="+attr_ids;
+                    // ?type=good&goods_id&good_num&good_attr&good_attr_id
+
+                    window.location.href = url;
 
                 }
             });
