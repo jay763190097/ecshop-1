@@ -18,13 +18,26 @@
         <div class="swiper-pagination swiper-pag3"></div>
     </div>
     <div class="prize_block">
-        <div class="prize_L">
-            <i>&yen;</i><span>398.08</span>
-        </div>
-        <div class="prize_R">
-            <span>&yen;420.88</span>
-            <span>限时优惠</span>
-        </div>
+
+        <?php if ($info['is_promote'] == 1) { ?>
+
+            <div class="prize_L">
+                <i>&yen;</i><span><?= $info['promote_price'] ?></span>
+            </div>
+
+            <div class="prize_R">
+                <span>&yen;<?= $info['shop_price'] ?></span>
+                <span>限时优惠</span>
+            </div>
+
+        <?php } else { ?>
+
+            <div class="prize_L">
+                <i>&yen;</i><span><?= $info['shop_price'] ?></span>
+            </div>
+
+        <?php } ?>
+
     </div>
     <p class="details_name">
         <span>海淘</span>
@@ -36,7 +49,7 @@
             <div class="toget">
                 <span>购物满减劵</span>
                 <span>最高立减50元</span>
-                <img src="images/next.png">
+                <img src="/images/next.png">
             </div>
         </li>
         <li>
@@ -48,7 +61,12 @@
             <span>跨境电商综合税率为9.1%,已由商家代付</span>
         </li>
         <li>
-            <span>快递</span>
+            <span style="display: block;
+    float: left;
+    margin-right: 0.12rem;
+    color: #999999;
+    font-size: 0.13rem;
+    letter-spacing: 1px;">快递</span>
             <span>邮费¥10.00·满200元包邮</span>
         </li>
     </ul>
@@ -186,7 +204,7 @@
     <div class="Specifications_block" type='0'>
     <div class="Specifications_block_001">
         <div class="img_areas">
-            <img src="/images/goods_details.png"/>
+            <img src="<?=$info['goods_img']?>"/>
         </div>
         <div class="goods_prizes_area">
             <span>&yen;<?= $info['price'] ?></span>
@@ -228,7 +246,7 @@
             <li>
                 <span>联系电话</span>
                 <img src="/images/next-333.png"/>
-                <a id="tel" href="tel:0913-11111111" style="font-size:0.14rem;">0913-11111111</a>
+                <a id="tel" href="tel:0913-11111111" style="font-size:0.14rem;">17693017762 </a>
             </li>
             <li>
                 <span>QQ</span>
@@ -236,7 +254,7 @@
             </li>
             <li>
                 <span>微信号</span>
-                <span class="server_num">11111111111</span>
+                <span class="server_num">jealook1</span>
             </li>
         </ul>
         <button type="button" class="finish server_complete">完成</button>
@@ -497,6 +515,7 @@
 
             });
 
+            //领取优惠券
             $(document).on('click', '.quick_get', function () {
 
                 var type_id = $(this).attr('data-id');
@@ -515,6 +534,8 @@
                             div.css('color', '#919191');
                             div.html('立即使用');
                             div.addClass('used').removeClass('quick_get');
+                        } else {
+                            location.href = '/login/login';
                         }
                     }
                 })
@@ -552,23 +573,6 @@
                 }, 300);
             });
 
-            //点击收藏;
-            $(".shoucang").on("click", function () {
-                var type = $(this).attr("type");
-                if (type == "false") {
-                    collect(1);
-                    layer.msg("收藏成功");
-                    $(".shoucang").children("img").attr("src", "/images/yishoucang.png");
-                    $(".shoucang").children("span").text("已收藏");
-                    $(this).attr("type", "true");
-                } else if (type == "true") {
-                    collect(0);
-                    layer.msg("取消收藏成功");
-                    $(".shoucang").children("img").attr("src", "/images/shoucang.png");
-                    $(".shoucang").children("span").text("收藏");
-                    $(this).attr("type", "false");
-                }
-            });
 
             function collect(type) {
                 $.ajax({
@@ -579,10 +583,64 @@
                         type: type,
                         goods_id: $("#goods_id").val()
                     }, success: function (data) {
+                        layer.msg(data.msg);
 
                     }
                 })
             }
+
+            //点击收藏;
+            $(".shoucang").on("click", function () {
+                var type = $(this).attr("type");
+                if (type == "false") {
+                    // collect(1);
+                    // layer.msg("收藏成功");
+
+
+                    $.ajax({
+                        url: '/list/collect',
+                        type: 'get',
+                        dataType: 'json',
+                        data: {
+                            type: 1,
+                            goods_id: $("#goods_id").val()
+                        }, success: function (data) {
+                            layer.msg(data.msg);
+                            if (data.code == 1) {
+                                $(".shoucang").children("img").attr("src", "/images/yishoucang.png");
+                                $(".shoucang").children("span").text("已收藏");
+                                $(".shoucang").attr("type", "true");
+                            }else{
+                                location.href = '/login/login';
+                            }
+                        }
+                    })
+
+                } else if (type == "true") {
+                    // collect(0);
+                    // layer.msg("取消收藏成功");
+
+
+                    $.ajax({
+                        url: '/list/collect',
+                        type: 'get',
+                        dataType: 'json',
+                        data: {
+                            type: 0,
+                            goods_id: $("#goods_id").val()
+                        }, success: function (data) {
+                            layer.msg(data.msg);
+                            if (data.code == 1) {
+                                $(".shoucang").children("img").attr("src", "/images/shoucang.png");
+                                $(".shoucang").children("span").text("收藏");
+                                $(".shoucang").attr("type", "false");
+                            }
+
+                        }
+                    })
+                }
+            });
+
 
             //点击规格框;
             $(".Specifications_block_002 li").click(function () {
@@ -595,7 +653,7 @@
 
             //点击跳转购物车;
             $(".shopping_car").click(function () {
-                window.location.href = "shop_car.html";
+                window.location.href = "/cart/index";
             });
 
             //点击加入购物车;
@@ -643,11 +701,12 @@
                         data: {
                             goods_id: $("#goods_id").val(),
                             attr_id: attr_ids,
-                            num:$(".goods_number").val()
+                            num: $(".goods_number").val()
                         }, success: function (data) {
-                            if (data.code == 0){
+                            if (data.code == 0) {
                                 layer.msg(data.msg);
-                            } else{
+                                location.href = '/login/login';
+                            } else {
                                 layer.msg("成功添加到购物车");
                             }
                         }
@@ -663,7 +722,7 @@
                     var good_attr = '211';
 
 
-                    var url = '/order/pay?type=good&goods_id='+goods_id+'&good_num='+good_num+'&good_attr='+good_attr+"&good_attr_id="+attr_ids;
+                    var url = '/order/pay?type=good&goods_id=' + goods_id + '&good_num=' + good_num + '&good_attr=' + good_attr + "&good_attr_id=" + attr_ids;
                     // ?type=good&goods_id&good_num&good_attr&good_attr_id
 
                     window.location.href = url;
