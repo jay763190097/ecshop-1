@@ -41,7 +41,7 @@ class LoginController extends Controller
                     $code = rand ( 1000, 9999 );
                     $logincode = $sms->send($mobile_phone,$code);
                     if($logincode){
-                        Yii::$app->db->createCommand()->insert('sx_user_code',
+                        Yii::$app->db->createCommand()->insert('ecs_user_code',
                             [
                                 'phone'     => $mobile_phone,
                                 'code'      => $code,
@@ -98,7 +98,7 @@ class LoginController extends Controller
                     $user = EcsUsers::find()->where(['mobile_phone' =>$date['mobile']])->asArray()->one();
                     if(!$user){
 
-                        $add = Yii::$app->db->createCommand()->insert('sx_user_user', [
+                        $add = Yii::$app->db->createCommand()->insert('ecs_users', [
                             'user_name'=>$date['mobile'],
                             'mobile_phone' =>$date['mobile'],
                             'password' => md5(123456),
