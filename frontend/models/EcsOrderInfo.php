@@ -378,5 +378,37 @@ class EcsOrderInfo extends \yii\db\ActiveRecord
 
     }
 
+    public static function add($goods_date,$order){
+
+        $transaction = Yii::$app->db->beginTransaction();
+        try{
+            //修改sx_build_grade中的数据
+            $res = Yii::$app->db->createCommand()->insert(self::tableName(), $order)->execute();
+            if(!$res)
+                throw new \Exception('操作失败！');
+
+            //修改$model对应的$relation中的数据
+
+            $last_id = Yii::$app->db->getLastInsertID();
+
+            foreach ($goods_date as $key =>$value){
+                $value['order_id'] = $last_id;
+                $rt = Yii::$app->db->createCommand()->insert('ecs_order_goods', $value)->execute();
+            }
+
+            if(!$rt)
+                throw new \Exception('操作失败！');
+
+            //以上执行都成功，则对数据库进行实际执行
+            $transaction->commit();
+            return true;
+        }catch (\Exception $e){
+            //如果抛出错误则进入catch，先callback，然后捕获错误，返回错误
+            $transaction->rollBack();
+            var_dump($e);
+            return false;
+        }
+    }
+
 }
 

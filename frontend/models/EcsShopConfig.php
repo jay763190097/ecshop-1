@@ -23,7 +23,7 @@ class EcsShopConfig extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%ecs_shop_config}}';
+        return '{{%shop_config}}';
     }
 
     /**
