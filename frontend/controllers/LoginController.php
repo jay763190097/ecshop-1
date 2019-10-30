@@ -97,6 +97,7 @@ class LoginController extends Controller
                 }else{
                     $user = EcsUsers::find()->where(['mobile_phone' =>$date['mobile']])->asArray()->one();
                     if(!$user){
+
                         $add = Yii::$app->db->createCommand()->insert('sx_user_user', [
                             'user_name'=>$date['mobile'],
                             'mobile_phone' =>$date['mobile'],
