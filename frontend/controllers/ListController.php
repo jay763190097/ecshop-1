@@ -60,9 +60,6 @@ class ListController extends Controller
     public function actionShop()
     {
 
-
-        \Yii::$app->session->set('user_date',['user_id'=>1]);
-
         $id = \Yii::$app->request->get('id');
 
         $info = Goods::getGoodsInfoById($id);
@@ -97,13 +94,12 @@ class ListController extends Controller
     public function actionCollect()
     {
 
-//        if (\Yii::$app->session->has('user_date')) {
-//            return json_encode(['code' => 0, 'msg' => '您还未登录']);
-//        }
-//
-//        $user_id = \Yii::$app->session->get('user_date')['user_id'];
+        if (!\Yii::$app->session->has('user_date')) {
+            return json_encode(['code' => 0, 'msg' => '您还未登录']);
+        }
 
-        $user_id = 3;
+        $user_id = \Yii::$app->session->get('user_date')['user_id'];
+
 
         $data = \Yii::$app->request->get();
 
@@ -112,9 +108,9 @@ class ListController extends Controller
                 $flag = Collect::cancelCollect($user_id, $data['goods_id']);
 
                 if ($flag) {
-                    return json_encode(['code' => 1, 'msg' => '取消收藏成功']);
+                    return json_encode(['code' => 1, 'msg' => '收藏成功']);
                 } else {
-                    return json_encode(['code' => 1, 'msg' => '取消收藏成功']);
+                    return json_encode(['code' => 1, 'msg' => '收藏失败']);
                 }
 
                 break;
@@ -124,7 +120,7 @@ class ListController extends Controller
                 if ($flag) {
                     return json_encode(['code' => 1, 'msg' => '取消收藏成功']);
                 } else {
-                    return json_encode(['code' => 1, 'msg' => '取消收藏成功']);
+                    return json_encode(['code' => 1, 'msg' => '取消收藏失败']);
                 }
 
                 break;
@@ -179,8 +175,8 @@ class ListController extends Controller
 
         $goods_id = \Yii::$app->request->get('goods_id');
 
-//        $user_id = \Yii::$app->session->get('user_date')['user_id'];
-        $user_id = 1;
+        $user_id = \Yii::$app->session->get('user_date')['user_id'];
+
 
         //我的红包
         $user_list = UserRed::getDataByUserId($user_id);
@@ -229,8 +225,7 @@ class ListController extends Controller
 
         $type_id = \Yii::$app->request->get('type_id');
 
-//        $user_id = \Yii::$app->session->get('user_date')['user_id'];
-        $user_id = 1;
+        $user_id = \Yii::$app->session->get('user_date')['user_id'];
 
         $user_list = UserRed::getDataByUserId($user_id);
 
@@ -259,11 +254,9 @@ class ListController extends Controller
      */
     public function actionAddCar()
     {
-
-
-//        if (!\Yii::$app->session->has('user_date')) {
-//            return json_encode(['code' => 0, 'msg' => '您还未登录']);
-//        }
+        if (!\Yii::$app->session->has('user_date')) {
+            return json_encode(['code' => 0, 'msg' => '您还未登录']);
+        }
 
         $data = \Yii::$app->request->get();
 
@@ -273,8 +266,8 @@ class ListController extends Controller
 
         }
 
-//        $user_id = \Yii::$app->session->get('user_date')['user_id'];
-        $user_id = 1;
+        $user_id = \Yii::$app->session->get('user_date')['user_id'];
+
 
         $goods = Goods::findOne(['goods_id' => $data['goods_id']]);
 
@@ -282,13 +275,15 @@ class ListController extends Controller
 
         $type_attr_id = GoodsAttr::findOne(['goods_attr_id'=>$attr_id])['attr_id'];
 
+        $data['attr_id'] = substr($data['attr_id'],1,-1);
+
         $date = [
             'user_id' => $user_id,
             'goods_id' => $data['goods_id'],
             'goods_attr_id' => $data['attr_id'],
             'goods_attr' => $type_attr_id,
             'goods_number' => $data['num'],
-            'goods_name'=>$goods['name']
+            'goods_name'=>$goods['goods_name']
         ];
 
         if ($goods['is_promote'] == 1 && time() < $goods['promote_start_date'] && time() > $goods['promote_end_date']) {

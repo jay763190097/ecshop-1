@@ -18,13 +18,26 @@
         <div class="swiper-pagination swiper-pag3"></div>
     </div>
     <div class="prize_block">
+
+        <?php if ($info['is_promote'] == 1){?>
+
         <div class="prize_L">
-            <i>&yen;</i><span>398.08</span>
+            <i>&yen;</i><span><?=$info['promote_price']?></span>
         </div>
+
         <div class="prize_R">
-            <span>&yen;420.88</span>
+            <span>&yen;<?=$info['shop_price']?></span>
             <span>限时优惠</span>
         </div>
+
+    <?php }else{?>
+
+            <div class="prize_L">
+                <i>&yen;</i><span><?=$info['shop_price']?></span>
+            </div>
+
+    <?php }?>
+
     </div>
     <p class="details_name">
         <span>海淘</span>
@@ -552,23 +565,6 @@
                 }, 300);
             });
 
-            //点击收藏;
-            $(".shoucang").on("click", function () {
-                var type = $(this).attr("type");
-                if (type == "false") {
-                    collect(1);
-                    layer.msg("收藏成功");
-                    $(".shoucang").children("img").attr("src", "/images/yishoucang.png");
-                    $(".shoucang").children("span").text("已收藏");
-                    $(this).attr("type", "true");
-                } else if (type == "true") {
-                    collect(0);
-                    layer.msg("取消收藏成功");
-                    $(".shoucang").children("img").attr("src", "/images/shoucang.png");
-                    $(".shoucang").children("span").text("收藏");
-                    $(this).attr("type", "false");
-                }
-            });
 
             function collect(type) {
                 $.ajax({
@@ -579,10 +575,63 @@
                         type: type,
                         goods_id: $("#goods_id").val()
                     }, success: function (data) {
+                        layer.msg(data.msg);
 
                     }
                 })
             }
+
+            //点击收藏;
+            $(".shoucang").on("click", function () {
+                var type = $(this).attr("type");
+                if (type == "false") {
+                    // collect(1);
+                    // layer.msg("收藏成功");
+
+
+                    $.ajax({
+                        url: '/list/collect',
+                        type: 'get',
+                        dataType: 'json',
+                        data: {
+                            type: 1,
+                            goods_id: $("#goods_id").val()
+                        }, success: function (data) {
+                            layer.msg(data.msg);
+                            if (data.code == 1){
+                            $(".shoucang").children("img").attr("src", "/images/yishoucang.png");
+                            $(".shoucang").children("span").text("已收藏");
+                                $(".shoucang").attr("type", "true");
+                            }
+                        }
+                    })
+
+                } else if (type == "true") {
+                    // collect(0);
+                    // layer.msg("取消收藏成功");
+
+
+                    $.ajax({
+                        url: '/list/collect',
+                        type: 'get',
+                        dataType: 'json',
+                        data: {
+                            type: 0,
+                            goods_id: $("#goods_id").val()
+                        }, success: function (data) {
+                            layer.msg(data.msg);
+                            if (data.code == 1){
+                                $(".shoucang").children("img").attr("src", "/images/shoucang.png");
+                                $(".shoucang").children("span").text("收藏");
+                                $(".shoucang").attr("type", "false");
+                            }
+
+                        }
+                    })
+                }
+            });
+
+
 
             //点击规格框;
             $(".Specifications_block_002 li").click(function () {

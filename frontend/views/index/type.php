@@ -177,7 +177,7 @@
 
             if (index < 3){
                 page = 0;
-                // getList();
+                getList();
             }
             if (index == 0) {
                 $(this).addClass("checked");
@@ -214,7 +214,7 @@
             }
             $(".kinds_list").children().remove();
             page = 0;
-            // getList();
+            getList();
             $(".comprehensive>li").eq(0).removeClass("checked");
             $(".comprehensive>li").eq(1).removeClass("checked");
             $(".comprehensive>li").eq(2).removeClass("checked");
@@ -228,7 +228,7 @@
             $(".kinds_list").children().remove();
             $(this).addClass("active").siblings("li").removeClass("active");
             page = 0;
-            // getList();
+            getList();
         });
 
         //点击筛选;
@@ -290,7 +290,7 @@
                 console.log("到底了");
                 $(".layui-icon-loading").css("display", "block");
 
-                // getList();
+                getList();
 
             }
         });

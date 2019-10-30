@@ -99,7 +99,7 @@ class IndexController extends Controller
             default:
 
         }
-        $info = Goods::getShopByTypePage(0, 0, 8, $andWhere);
+        $info = Goods::getIndexShopList(0, $page, 8, $andWhere);
 
         return json_encode($info);
 
@@ -109,7 +109,7 @@ class IndexController extends Controller
     public function actionType()
     {
 
-        $goods_name = \Yii::$app->request->get('goods_name');
+        $goods_name = \Yii::$app->request->get('goods_name','');
 
         $type_list = TypeAttr::getDataByTypeId();
 

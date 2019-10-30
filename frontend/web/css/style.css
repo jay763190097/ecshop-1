@@ -232,6 +232,7 @@ ul,li{
     float: left;
     margin-right: 0.1rem;
     margin-bottom: 0.12rem;
+	height: 2.28rem;
 }
 .kinds_list .goods_img{
 	background: #fff;
@@ -575,6 +576,7 @@ i{
 	font-size: 0.14rem;
 	text-align: justify;
 	margin-bottom: 0.1rem;
+	width: 100%;
 }
 .details_name>span{
 	background: #8d00ef;

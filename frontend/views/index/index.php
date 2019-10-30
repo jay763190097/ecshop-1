@@ -316,11 +316,12 @@
 
             //屏幕滚动到底部加载更多;
             $(window).scroll(function (event) {
+
                 if (($(document).scrollTop()) >= ($(document).height() - $(window).height())) {
                     console.log("到底了");
                     $(".layui-icon-loading").css("display", "block");
                     //ajax请求省略;
-
+                    // alert(111);
                     getList(type);
 
                     // setTimeout(function () {

@@ -138,6 +138,7 @@ class Goods extends ActiveRecord
         $count = self::find()
             ->where($where)
             ->andWhere($andWher)
+            ->join('join', $goods_attr, $goods_attr . '.goods_id=' . $goods_name . '.goods_id')
             ->count();
 
         foreach ($list as $k => $v) {
