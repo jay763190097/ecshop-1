@@ -507,6 +507,8 @@
                             $(".Coupon_lists").append(html);
                         } else {
                             layer.msg(data.msg);
+
+                            location.href='/login/login';
                         }
 
                     }
