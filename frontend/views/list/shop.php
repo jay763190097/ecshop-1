@@ -1,7 +1,13 @@
 <?php
 ?>
 <?php $this->beginBlock('self_css'); ?>
+    <style>
 
+        .three_icons img{
+            width: 100%;
+        }
+
+    </style>
 <?php $this->endBlock(); ?>
     <input type="hidden" id="goods_id" value="<?= $info['goods_id'] ?>">
     <input type="hidden" id="image_url" value="<?= $image_url ?>">
@@ -179,7 +185,7 @@
         <?php } else { ?>
             <div class="shoucang" type="true">
                 <img src="/images/yishoucang.png"/>
-                <span>取消收藏</span>
+                <span>已收藏</span>
             </div>
         <?php } ?>
         <div class="controls">
@@ -292,9 +298,11 @@
                 var goods_number = $(".goods_number").val();
                 goods_number++;
                 var Stock = $(".Stock").text();
+
                 if (goods_number >= Stock) {
                     goods_number = Stock;
                 }
+                console.log(Stock);
                 $(".goods_number").val(goods_number);
             });
 
@@ -305,6 +313,9 @@
                 if (goods_number <= 1) {
                     goods_number = 1;
                 }
+
+                goods_number = parseInt(goods_number);
+
                 $(".goods_number").val(goods_number);
             });
 
