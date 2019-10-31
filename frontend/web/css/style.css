@@ -232,6 +232,7 @@ ul,li{
     float: left;
     margin-right: 0.1rem;
     margin-bottom: 0.12rem;
+	height: 2.28rem;
 }
 .kinds_list .goods_img{
 	background: #fff;

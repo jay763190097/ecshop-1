@@ -9,7 +9,9 @@ use frontend\models\Activity;
 use frontend\models\Article;
 use frontend\models\Goods;
 use frontend\models\GoodsAttr;
+use frontend\models\Search;
 use frontend\models\TypeAttr;
+use Symfony\Component\DomCrawler\Field\InputFormField;
 use yii\web\Controller;
 
 class IndexController extends Controller
@@ -46,7 +48,7 @@ class IndexController extends Controller
             'haitao' => $haitao,
             'self' => $self,
             'discount' => $discount,
-            'artcle'=>$artcle,
+            'artcle' => $artcle,
         ]);
 
     }
@@ -73,24 +75,24 @@ class IndexController extends Controller
         $andWhere = [];
         switch ($type) {
             case 0:
-                $andWhere = [$goods_name.'.is_best' => 1];
+                $andWhere = [$goods_name . '.is_best' => 1];
                 break;
             case 1:
-                $andWhere = [$goods_attr.'.attr_value' => '日抛'];
+                $andWhere = [$goods_attr . '.attr_value' => '日抛'];
                 break;
             case 2:
-                $andWhere = [$goods_attr.'.attr_value' => '双周抛'];
+                $andWhere = [$goods_attr . '.attr_value' => '双周抛'];
                 break;
             case 3:
-                $andWhere = [$goods_attr.'.attr_value' => '月抛'];
+                $andWhere = [$goods_attr . '.attr_value' => '月抛'];
                 break;
             case 4:
-                $andWhere = [$goods_attr.'.attr_value' => '透明片'];
+                $andWhere = [$goods_attr . '.attr_value' => '透明片'];
                 break;
             default:
 
         }
-        $info = Goods::getIndexShopList(0, $page, 8, $andWhere);
+        $info = Goods::getIndexShopList(0, $page, 10, $andWhere);
 
         return json_encode($info);
 
@@ -100,13 +102,27 @@ class IndexController extends Controller
     public function actionType()
     {
 
-        $goods_name = \Yii::$app->request->get('goods_name','');
+        $goods_name = \Yii::$app->request->get('goods_name', '');
 
-        $type = \Yii::$app->request->get('action',0);
+        if (!empty($goods_name)){
+            \Yii::$app->db->createCommand()->insert(Search::tableName(),
+                [
+                    'keyword'=>$goods_name,
+                    'count'=>1,
+                    'type'=>'good',
+                    'store_id'=>1,
+                    'updated'=>1,
+                    'user_id'=>\Yii::$app->session->get('user_date',['user_id'=>0])['user_id'],
+                    'create_time'=>time()
+                ]
+            )->execute();
+        }
+
+        $type = \Yii::$app->request->get('action', 0);
 
         $type_list = TypeAttr::getDataByTypeId();
 
-        $list = Goods::getShopByType($type, 0, 8,['like', Goods::tableName() . '.goods_name', $goods_name]);
+        $list = Goods::getShopByType($type, 0, 8, ['like', Goods::tableName() . '.goods_name', $goods_name]);
 
         return $this->render('type', ['list' => $list, 'type_list' => $type_list]);
 
@@ -196,9 +212,21 @@ class IndexController extends Controller
     /**
      *  搜索
      */
-    public function actionSearch(){
+    public function actionSearch()
+    {
 
-        return $this->render('search');
+        $user_id = 0;
+        $list = [];
+        if (!\Yii::$app->session->has('user_date')) {
+            $user_id = \Yii::$app->session->get('user_date')['user_id'];
+            $list = Search::getUserid($user_id);
+
+        }
+
+        //热门
+        $hot_list = Search::getHot();
+
+        return $this->render('search', ['hot_list' => $hot_list, 'list' => $list]);
 
     }
 
@@ -206,15 +234,16 @@ class IndexController extends Controller
     /**
      *  公告详情
      */
-    public function actionDetail(){
+    public function actionDetail()
+    {
 
         $id = \Yii::$app->request->get('id');
 
-        $info = Article::findOne(['article_id'=>$id]);
+        $info = Article::findOne(['article_id' => $id]);
 
-        $info['add_time'] = date('Y-m-d H:i:s',$info['add_time']);
+        $info['add_time'] = date('Y-m-d H:i:s', $info['add_time']);
 
-        return $this->render('detail',['info'=>$info]);
+        return $this->render('detail', ['info' => $info]);
 
     }
 

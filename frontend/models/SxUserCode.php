@@ -21,7 +21,7 @@ class SxUserCode extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%sx_user_code}}';
+        return '{{%user_code}}';
     }
 
     /**
