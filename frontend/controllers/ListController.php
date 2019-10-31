@@ -108,9 +108,9 @@ class ListController extends Controller
                 $flag = Collect::cancelCollect($user_id, $data['goods_id']);
 
                 if ($flag) {
-                    return json_encode(['code' => 1, 'msg' => '收藏成功']);
+                    return json_encode(['code' => 1, 'msg' => '取消收藏成功']);
                 } else {
-                    return json_encode(['code' => 1, 'msg' => '收藏失败']);
+                    return json_encode(['code' => 1, 'msg' => '取消收藏失败']);
                 }
 
                 break;
@@ -118,9 +118,9 @@ class ListController extends Controller
                 $flag = Collect::addCollect($user_id, $data['goods_id']);
 
                 if ($flag) {
-                    return json_encode(['code' => 1, 'msg' => '取消收藏成功']);
+                    return json_encode(['code' => 1, 'msg' => '收藏成功']);
                 } else {
-                    return json_encode(['code' => 1, 'msg' => '取消收藏失败']);
+                    return json_encode(['code' => 1, 'msg' => '收藏失败']);
                 }
 
                 break;
@@ -190,26 +190,28 @@ class ListController extends Controller
 
         array_push($red_list, $goods_red_info);
 
-        foreach ($red_list as $k => $v) {
+        if (!empty($red_list[0])) {
+            foreach ($red_list as $k => $v) {
 
-            $red_list[$k]['use_start_date'] = date('Y-m-d', $v['use_start_date']);
-            $red_list[$k]['use_end_date'] = date('Y-m-d', $v['use_end_date']);
+                $red_list[$k]['use_start_date'] = date('Y-m-d', $v['use_start_date']);
+                $red_list[$k]['use_end_date'] = date('Y-m-d', $v['use_end_date']);
 
-            if (in_array($v['type_id'], $user_list)) {
-                $red_list[$k]['is_has'] = 1;
-            } else {
-                $red_list[$k]['is_has'] = 0;
+                if (in_array($v['type_id'], $user_list)) {
+                    $red_list[$k]['is_has'] = 1;
+                } else {
+                    $red_list[$k]['is_has'] = 0;
+                }
+
+                switch ($v['send_type']) {
+                    case 1:
+                        $red_list[$k]['min_amount'] = $v['min_goods_amount'];
+                        break;
+                    case 2:
+                        $red_list[$k]['min_amount'] = $v['min_amount'];
+                        break;
+                }
+
             }
-
-            switch ($v['send_type']) {
-                case 1:
-                    $red_list[$k]['min_amount'] = $v['min_goods_amount'];
-                    break;
-                case 2:
-                    $red_list[$k]['min_amount'] = $v['min_amount'];
-                    break;
-            }
-
         }
 
         return json_encode(['code' => 1, 'data' => $red_list]);
@@ -272,11 +274,11 @@ class ListController extends Controller
 
         $goods = Goods::findOne(['goods_id' => $data['goods_id']]);
 
-        $attr_id = explode(',',$data['attr_id']);
+        $attr_id = explode(',', $data['attr_id']);
 
-        $type_attr_id = GoodsAttr::findOne(['goods_attr_id'=>$attr_id])['attr_id'];
+        $type_attr_id = GoodsAttr::findOne(['goods_attr_id' => $attr_id])['attr_id'];
 
-        $data['attr_id'] = substr($data['attr_id'],1,-1);
+        $data['attr_id'] = substr($data['attr_id'], 1, -1);
 
         $date = [
             'user_id' => $user_id,
@@ -284,7 +286,7 @@ class ListController extends Controller
             'goods_attr_id' => $data['attr_id'],
             'goods_attr' => $type_attr_id,
             'goods_number' => $data['num'],
-            'goods_name'=>$goods['goods_name']
+            'goods_name' => $goods['goods_name']
         ];
 
         if ($goods['is_promote'] == 1 && time() < $goods['promote_start_date'] && time() > $goods['promote_end_date']) {
@@ -295,12 +297,12 @@ class ListController extends Controller
             $date['market_price'] = $goods['market_price'];
         }
 
-        $flag = \Yii::$app->db->createCommand()->insert('ecs_cart',$date)->execute();
+        $flag = \Yii::$app->db->createCommand()->insert('ecs_cart', $date)->execute();
 
-        if ($flag){
-            return json_encode(['code'=>1,'msg'=>'加入成功']);
-        }else{
-            return json_encode(['code'=>0,'msg'=>'加入失败']);
+        if ($flag) {
+            return json_encode(['code' => 1, 'msg' => '加入成功']);
+        } else {
+            return json_encode(['code' => 0, 'msg' => '加入失败']);
         }
 
     }

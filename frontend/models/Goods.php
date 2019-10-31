@@ -268,7 +268,8 @@ class Goods extends ActiveRecord
             $table_name . '.shop_price',//实际售价
             $table_name . '.is_promote',//是否特价促销；0，否；1，是
             $table_name . '.goods_id',
-            $table_name.'.goods_img'
+            $table_name.'.goods_img',
+            $table_name.'.goods_number'
         ];
 
         $info = self::find()
