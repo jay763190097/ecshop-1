@@ -42,7 +42,7 @@ use yii\helpers\Url;
 
         <span>头像</span>
 
-        <img src="<?php  echo $user_date['img_url']?Yii::$app->params['imgurl'].$user_date['img_url']:'/images/head_images.jpg'?>" class="head_images" id="head_images" />
+        <img src="<?php  echo $user_date['img_url']?\Yii::$app->params['admin_url'].$user_date['img_url']:'/images/head_images.jpg'?>" class="head_images" id="head_images" />
 
     </li>
 

@@ -60,7 +60,7 @@ class SxAdminConfig extends \yii\db\ActiveRecord
 
     {
 
-        return '{{sx_admin_config}}';
+        return '{{%sx_admin_config}}';
 
     }
 

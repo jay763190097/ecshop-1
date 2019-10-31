@@ -55,7 +55,7 @@ use yii\helpers\Url;
         <?php foreach ($order as $key=>$value):?>
             <li>
                 <div class="imgarea_80">
-                    <img src="<?php echo Yii::$app->params['imgurl'].$value['goods_thumb']?>"/>
+                    <img src="<?php echo Yii::$app->params['admin_url'].'/'.$value['goods_thumb']?>"/>
                 </div>
                 <div class="goods_details_80">
                     <a href="goods_details.html" class="goods_name_80">

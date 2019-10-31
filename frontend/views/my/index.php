@@ -34,7 +34,7 @@ use yii\helpers\Url;
 
     <?php else:?>
 
-        <img src="<?php  echo $user_date['img_url']?Yii::$app->params['imgurl'].$user_date['img_url']:'/images/headimg.png'?>" onclick="window.location.href='/my/info' "/>
+        <img src="<?php  echo $user_date['img_url']?Yii::$app->params['admin_url'].$user_date['img_url']:'/images/headimg.png'?>" onclick="window.location.href='/my/info' "/>
 
         <a href="<?php echo Url::to(['/my/info']) ?>"><?php echo $user_date['user_name']?></a>
 
@@ -46,7 +46,7 @@ use yii\helpers\Url;
 
     <span>优惠券</span>
 
-    <a href="my_coupon.html">免费领取更多优惠券 <img src="/images/nextpage.png/"></a>
+    <a href="<?php echo Url::to(['/list/red-list']) ?>">免费领取更多优惠券 <img src="/images/nextpage.png/"></a>
 
 </div>
 
