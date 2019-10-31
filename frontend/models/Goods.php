@@ -335,8 +335,31 @@ class Goods extends ActiveRecord
             ->one();
 
         return $info;
-
-
     }
 
+    /**
+     * 订单商品
+     * @param $goods_id
+     * @param $good_attr_id
+     * @param $good_attr
+     * @param $good_num
+     * @return array|ActiveRecord[]
+     */
+    public static function goode_date($goods_id,$good_attr_id,$good_attr,$good_num){
+        $goods_date = self::find()->select('goods_id,goods_name,goods_thumb,shop_price,market_price')->andWhere(['goods_id'=>$goods_id])->asArray()->all();
+        $attr_id = explode(',',$good_attr_id);
+
+        foreach ($goods_date as $key =>$value){
+            $goods_date[$key]['goods_price'] = $value['shop_price'];
+            $goods_date[$key]['goods_attr'] = Attribute::find()->andWhere(['attr_id'=>$good_attr])->asArray()->one()['attr_name'];
+            $attr_id = GoodsAttr::find()->select('attr_value')->andWhere(['IN','goods_attr_id',$attr_id])->asArray()->all();
+            $attr_id = array_column($attr_id,'attr_value');
+            $goods_date[$key]['goods_attr_id'] = implode(',',$attr_id);
+            $goods_date[$key]['goods_attr_ids'] = $good_attr_id;
+            $goods_date[$key]['goods_attrs'] = $good_attr;
+            $goods_date[$key]['goods_num'] = $good_num;
+        }
+
+        return $goods_date;
+    }
 }

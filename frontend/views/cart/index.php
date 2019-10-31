@@ -487,7 +487,7 @@ use yii\helpers\Url;
 
                 var date = JSON.stringify( arr )
 
-                window.location.href="/order/pay?type=2&date="+date;
+                window.location.href="/order/pay?type=cart&date="+date;
 
             });
 

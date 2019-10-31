@@ -8,6 +8,7 @@
 
 namespace frontend\controllers;
 
+use frontend\models\Goods;
 use yii\web\Controller;
 use Yii;
 use frontend\models\EcsCart;
@@ -43,34 +44,48 @@ class OrderController extends  Controller
                         $cartDate = EcsCart::good_date($value['cart_id']);
                         $cartDate['goods_num'] = $value['good_num'];
                         $order[] = $cartDate;
-                        $sum = $sum+$cartDate['goods_num']*$cartDate['goods_price'];
+                        $sum = $sum + $cartDate['goods_num']*$cartDate['goods_price'];
                         $good_sum = $good_sum+$cartDate['goods_num']*$cartDate['goods_price'].".00";
                     }
 
-
-                    //红包金额
-                    $UserBonus = EcsUserBonus::userBonus($user_date['user_id'],$sum);
-                    if($UserBonus){
-                        $userBonus = $UserBonus;
-                        $sum = $sum-$UserBonus;
-                    }else{
-                        $userBonus ="0.00";
-                    }
-
-                    //运费金额
-                    if($sum > 200){
-                        $freight = 0;
-                    }else{
-                        $sum = $sum+$freight;
-                    }
-
-                    //我的收获地址
-                    $user_address = EcsUserAddress::find()->andWhere(['user_id'=>$user_date['user_id'],'is_del'=>1])->orderBy('is_default desc')->asArray()->one();
-                    $sum = $sum.".00";
-                    return $this->render('pay',['user_address'=>$user_address,'order'=>$order,'good_sum'=>$good_sum,'freight'=>$freight,'userBonus'=>$userBonus,'sum'=>$sum]);
                 }elseif($date['type'] == "good"){
+                    $date['good_attr_id'] = trim($date['good_attr_id'], ',');
+                    $order = [];
+                    $order = Goods::goode_date($date['goods_id'],$date['good_attr_id'],$date['good_attr'],$date['good_num']);
 
+                    empty($order)?[]:$order;
+
+                    $sum = "0.00";
+                    $freight = "10.00";
+                    $good_sum = 0.00;
+
+                    foreach ($order as $key=>$value){
+                        $sum = $sum+$value['goods_num']*$value['goods_price'];
+                        $good_sum = $good_sum+$value['goods_num']*$value['goods_price'].".00";
+                    }
                 }
+
+                //红包金额
+                $UserBonus = EcsUserBonus::userBonus($user_date['user_id'],$sum);
+                if($UserBonus){
+                    $userBonus = $UserBonus;
+                    $sum = $sum-$UserBonus;
+                }else{
+                    $userBonus ="0.00";
+                }
+
+                //运费金额
+                if($sum > 200){
+                    $freight = 0;
+                }else{
+                    $sum = $sum+$freight;
+                }
+
+                //我的收获地址
+                $user_address = EcsUserAddress::find()->andWhere(['user_id'=>$user_date['user_id'],'is_del'=>1])->orderBy('is_default desc')->asArray()->one();
+                $sum = $sum.".00";
+
+                return $this->render('pay',['user_address'=>$user_address,'order'=>$order,'good_sum'=>$good_sum,'freight'=>$freight,'userBonus'=>$userBonus,'sum'=>$sum]);
             }
         }else{
             return $this->redirect('/login/login');
