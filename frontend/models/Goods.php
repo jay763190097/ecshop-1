@@ -132,6 +132,7 @@ class Goods extends ActiveRecord
             ->limit($limit)
             ->offset(($page - 1) * $limit)
             ->select($select)
+            ->groupBy(self::tableName().'.goods_id')
             ->asArray()
             ->all();
 
@@ -139,7 +140,9 @@ class Goods extends ActiveRecord
             ->where($where)
             ->andWhere($andWher)
             ->join('join', $goods_attr, $goods_attr . '.goods_id=' . $goods_name . '.goods_id')
+            ->groupBy(self::tableName().'.goods_id')
             ->count();
+
 
         foreach ($list as $k => $v) {
 
@@ -147,7 +150,7 @@ class Goods extends ActiveRecord
 
         }
 
-        return ['list' => $list, 'count' => $count];
+        return ['list' => $list, 'count' => $count,'count_page'=>ceil($count/$limit)];
 
     }
 
@@ -216,7 +219,7 @@ class Goods extends ActiveRecord
 
         }
 
-        return ['list' => $list, 'count' => $count];
+        return ['list' => $list, 'count' => $count,'count_page' =>ceil($count/10)];
 
     }
 
@@ -264,7 +267,8 @@ class Goods extends ActiveRecord
             $table_name . '.promote_price',//促销价
             $table_name . '.shop_price',//实际售价
             $table_name . '.is_promote',//是否特价促销；0，否；1，是
-            $table_name . '.goods_id'
+            $table_name . '.goods_id',
+            $table_name.'.goods_img'
         ];
 
         $info = self::find()
@@ -276,6 +280,8 @@ class Goods extends ActiveRecord
 
         $url = \Yii::$app->params['admin_url'];
         $info['goods_desc'] = htmlspecialchars_decode($info['goods_desc']);
+
+        $info['goods_img'] = $url .'/'.$info['goods_img'];
 
         preg_match_all('/<img src="(.*?)"/i', $info['goods_desc'], $match);
 

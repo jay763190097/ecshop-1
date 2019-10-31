@@ -34,7 +34,7 @@ class EcsCart extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%ecs_cart}}';
+        return '{{%cart}}';
     }
 
     /**
@@ -130,6 +130,8 @@ class EcsCart extends \yii\db\ActiveRecord
             ->asArray()
             ->one();
 
+        $goods_attr = $date['goods_attr'];
+        $goods_attr_id = $date['goods_attr_id'];
         $date['goods_attr'] = EcsAttribute::find()->andWhere(['attr_id'=>$date['goods_attr']])->asArray()->one()['attr_name'];
         $attr_id = explode(",", $date['goods_attr_id']);
         $attrdate = EcsGoodAttr::find()->select('attr_value')->andWhere(['in','goods_attr_id',$attr_id])->asArray()->all();
@@ -143,7 +145,9 @@ class EcsCart extends \yii\db\ActiveRecord
             'market_price'=>$date['market_price'],
             'goods_attr'=>$date['goods_attr'],
             'goods_attr_id'=>$date['goods_attr_id'],
-            'goods_thumb'=>$date['goods_thumb']
+            'goods_thumb'=>$date['goods_thumb'],
+            'goods_attr_ids'=>$goods_attr_id,
+            'goods_attrs'=>$goods_attr,
         ];
         return $res_date;
     }

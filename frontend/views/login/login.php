@@ -15,7 +15,7 @@
 <div class="password_login">
     <h3 class="write_code login_code">手机号码登录</h3>
     <input type="number" name="new_phone" class="new_phone new_phone2" maxlength="11" placeholder="请输入手机号码"/>
-    <button type="button" class="getnewcode disab_get" disabled="disabled">获取验证码</button>
+    <button type="button" id="codelogin" class="getnewcode disab_get" disabled="disabled">获取验证码</button>
     <p class="read">点击按钮表示您已阅读并同意<a href=""> 《用户协议》</a></p>
 </div>
 
@@ -26,7 +26,7 @@
         <input type="password" placeholder="请输入密码" class="password_val"/>
         <span class="open_closed" type="false"><img src="/images/close.png"/></span>
     </div>
-    <button type="button" class="getnewcode no_password_login_btn" disabled="disabled">登录</button>
+    <button type="button" id="passwordlogin" class="getnewcode no_password_login_btn" disabled="disabled">登录</button>
 
 </div>
 <?php $this->beginBlock('self_js'); ?>
@@ -46,7 +46,7 @@
         });
 
         //点击获取验证码;
-        $(".disab_get").on("click",function(){
+        $("#codelogin").on("click",function(){
             var new_phone2=$(".new_phone2").val();
             $.ajax({
                 url:"/index.php/login/login",
@@ -54,11 +54,9 @@
                 dataType:"json",
                 data:{new_phone2:new_phone2,type:'code'},
                 success:function(res){
-                    console.log(res);
-                    return false;
                     if(res.code == 20000){
                         layer.msg(res.message);
-                        window.location.reload();
+                        window.location.href="/login/verification?mobile="+res.mobile;
                     }else{
                         layer.msg(res.message);
                         window.location.reload();
@@ -120,7 +118,7 @@
             }
         });
 
-        $('.getnewcode').click(function () {
+        $('#passwordlogin').click(function () {
             var  new_phone3=$(".new_phone3").val();
             var password_val = $(".password_val").val();
             // password_val =  $.md5(password_val);

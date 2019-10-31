@@ -6,6 +6,7 @@ namespace frontend\controllers;
 
 use frontend\method\Method;
 use frontend\models\Activity;
+use frontend\models\Article;
 use frontend\models\Goods;
 use frontend\models\GoodsAttr;
 use frontend\models\TypeAttr;
@@ -17,21 +18,6 @@ class IndexController extends Controller
     public $layout = 'layout';
 
     public $url = 'http://47.111.117.79:88';
-
-    public function actionCe(){
-
-
-        define('IN_ECS','aaa');
-        include 'sms/cls_sms.php';
-
-        $sms = new \sms();
-
-        $flag = $sms->send('17623640359','aaaaaaaaaaaaaaaaa');
-
-        var_dump($flag);
-
-    }
-
 
     public function actionIndex()
     {
@@ -51,11 +37,16 @@ class IndexController extends Controller
         //限时优惠
         $discount = Activity::getActivity();
 
+        //文章
+
+        $artcle = Article::getDataList();
+
         return $this->render('index', [
             'banner' => $banner,
             'haitao' => $haitao,
             'self' => $self,
-            'discount' => $discount
+            'discount' => $discount,
+            'artcle'=>$artcle,
         ]);
 
     }
@@ -70,7 +61,7 @@ class IndexController extends Controller
         $request = \Yii::$app->request;
 
         $type = $request->get('type', 0);
-        $page = $request->get('page', 0);
+        $page = $request->get('page', 1);
 
         //type 0:精品；1：日抛；2：双周抛；3：月抛；4：透明片
 
@@ -111,9 +102,11 @@ class IndexController extends Controller
 
         $goods_name = \Yii::$app->request->get('goods_name','');
 
+        $type = \Yii::$app->request->get('action',0);
+
         $type_list = TypeAttr::getDataByTypeId();
 
-        $list = Goods::getShopByType(0, 0, 8,['like', Goods::tableName() . '.goods_name', $goods_name]);
+        $list = Goods::getShopByType($type, 0, 8,['like', Goods::tableName() . '.goods_name', $goods_name]);
 
         return $this->render('type', ['list' => $list, 'type_list' => $type_list]);
 
@@ -209,5 +202,20 @@ class IndexController extends Controller
 
     }
 
+
+    /**
+     *  公告详情
+     */
+    public function actionDetail(){
+
+        $id = \Yii::$app->request->get('id');
+
+        $info = Article::findOne(['article_id'=>$id]);
+
+        $info['add_time'] = date('Y-m-d H:i:s',$info['add_time']);
+
+        return $this->render('detail',['info'=>$info]);
+
+    }
 
 }

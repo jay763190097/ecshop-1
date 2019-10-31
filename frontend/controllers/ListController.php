@@ -169,9 +169,10 @@ class ListController extends Controller
     public function actionRedList()
     {
 
-        if (\Yii::$app->session->has('user_date')) {
+        if (!\Yii::$app->session->has('user_date')) {
             return json_encode(['code' => 0, 'msg' => '您还未登录']);
         }
+
 
         $goods_id = \Yii::$app->request->get('goods_id');
 
