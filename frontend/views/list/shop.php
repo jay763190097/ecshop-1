@@ -73,7 +73,9 @@
     color: #999999;
     font-size: 0.13rem;
     letter-spacing: 1px;">快递</span>
-            <span>邮费¥10.00·满200元包邮</span>
+            <span style="color: #333333;
+    font-size: 0.13rem;
+    letter-spacing: 1px;">邮费¥10.00·满200元包邮</span>
         </li>
     </ul>
     <ul class="Explain Explain_icon">
