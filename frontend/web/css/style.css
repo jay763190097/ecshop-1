@@ -232,7 +232,6 @@ ul,li{
     float: left;
     margin-right: 0.1rem;
     margin-bottom: 0.12rem;
-	height: 2.28rem;
 }
 .kinds_list .goods_img{
 	background: #fff;
@@ -272,7 +271,7 @@ ul,li{
 	display: block;
 	letter-spacing: 1px;
 	font-size: 0.11rem;
-	color: #e5e5e5;
+	color: #cecece;
 }
 #foot>li.active>a>span{
 	color: #ef9f00;
@@ -576,7 +575,6 @@ i{
 	font-size: 0.14rem;
 	text-align: justify;
 	margin-bottom: 0.1rem;
-	width: 100%;
 }
 .details_name>span{
 	background: #8d00ef;
@@ -3529,4 +3527,126 @@ a:active, a:hover{
 	margin-right: 0.25rem;
 	margin-top: 0.15rem;
 	letter-spacing: 1px;
+}
+.release_up_pic>div{
+	width: 100%;
+}
+#chose_pic_btn{
+	width: calc(33.3% - 0.15rem);
+	margin-right: 0;
+	position: relative;
+	height: 1rem;
+	border: 1px solid rgba(255,142,135,0.3);
+	border-radius: 0.04rem;
+	background: url(../images/add_imgs.png) no-repeat center center;
+	background-size: 0.25rem;
+	float: left;
+}
+#chose_pic_btn input{
+	position: absolute;
+    left: 0px;
+    top: 0px;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+}
+.uploads_img>div{
+	background: #fff;
+}
+.pic_look{
+	width: calc(33.3% - 0.1rem);
+	margin-right: 0.15rem;
+	float: left;
+	background-size:cover;
+	background-position:center center;
+	background-repeat: no-repeat;
+	box-sizing:border-box;
+	position:relative;
+	height: 1rem;
+}
+.pic_look>i{
+	width: 0.15rem;
+	height: 0.15rem;
+	border-radius: 50%;
+	background: #ff5d53;
+	display: block;
+	color: #fff;
+	line-height: 0.12rem;
+	text-align: center;
+	position: absolute;
+	top: 0.06rem;
+	right: 0.06rem;
+}
+.up_pic>span:nth-child(3){
+	margin-right: 0;
+}
+.own{
+	background: #ff9a49!important;	
+}
+.big_img{
+	position: fixed;
+    z-index: -1;
+    opacity: 0;
+    background: rgba(0,0,0,0.9);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+.big_img .swiper-container2{
+	position: relative;
+    width: 100%;
+    height: 100%;
+}
+.cell{
+	width: 100%;
+    height: 100%;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+.cell img{
+	max-width: 90%;
+    max-height: 80%;
+    margin: 0 auto;
+}
+.big_img .swiper-slide{
+	width: 100%;
+    height: 100%;
+    display: table;
+}
+.big_img .swiper-container2 .swiper-wrapper{
+	width: 100%;
+    height: 100%;
+}
+.big_img .swiper-pagination2{
+	position: absolute;
+    top: 0.2rem;
+    text-align: center;
+    width: 100%;
+}
+.big_img .swiper-pagination2 span{
+	opacity: 1;
+    background: #fff;
+    margin: 0 0.05rem;
+}
+.info_goods_details{
+	display: none;
+}
+
+
+
+.prize_block2{
+	background: url(../images/prize_back2.png);
+}
+.three_icons>div:nth-child(1)>img, .icons_right>img{
+	display: block;
+	max-width: 100%;
+}
+.buy_block>div>span{
+	letter-spacing: 0;
+}
+.aboutus_block>span{
+	text-align: center;
+	display: block;	
 }
