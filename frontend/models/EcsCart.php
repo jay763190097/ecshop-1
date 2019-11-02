@@ -262,15 +262,26 @@ class EcsCart extends \yii\db\ActiveRecord
 
 
 
-        $date['goods_attr'] = EcsAttribute::find()->andWhere(['attr_id'=>$date['goods_attr']])->asArray()->one()['attr_name'];
+        if(!empty($date['goods_attr'])){
+            $goods_attr = $date['goods_attr'];
+            $date['goods_attr']  = EcsAttribute::find()->andWhere(['attr_id'=>$date['goods_attr']])->asArray()->one()['attr_name'];
+        }else{
+            $date['goods_attr'] = '';
+        }
 
-        $attr_id = explode(",", $date['goods_attr_id']);
+        if(!empty($date['goods_attr_id'])){
+            $goods_attr_ids = $date['goods_attr_id'];
+            $attr_id = explode(",", $date['goods_attr_id']);
 
-        $attrdate = EcsGoodAttr::find()->select('attr_value')->andWhere(['in','goods_attr_id',$attr_id])->asArray()->all();
+            $attrdate = EcsGoodAttr::find()->select('attr_value')->andWhere(['in','goods_attr_id',$attr_id])->asArray()->all();
 
-        $attrdate = array_column($attrdate, 'attr_value');
+            $attrdate = array_column($attrdate, 'attr_value');
 
-        $date['goods_attr_id'] = implode(',',$attrdate);
+            $date['goods_attr_id'] = implode(',',$attrdate);
+        }else{
+            $date['goods_attr_id'] = "";
+        }
+
 
 
 
@@ -288,7 +299,9 @@ class EcsCart extends \yii\db\ActiveRecord
 
             'goods_attr_id'=>$date['goods_attr_id'],
 
-            'goods_thumb'=>$date['goods_thumb']
+            'goods_thumb'=>$date['goods_thumb'],
+            'goods_attrs'=>$goods_attr,
+            'goods_attr_ids'=>$goods_attr_ids
 
         ];
 

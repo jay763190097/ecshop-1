@@ -26,6 +26,10 @@ class OrderController extends  Controller
 
     public $url = 'http://47.111.117.79:88';
 
+    /**
+     * 确认订单
+     * @return string|Response
+     */
     public function actionPay(){
         $request = Yii::$app->request;
         $user_date = Yii::$app->session['user_date'];
@@ -92,7 +96,9 @@ class OrderController extends  Controller
         }
     }
 
-
+    /**
+     * 结算订单
+     */
     public function actionCreationOrder(){
         $request = Yii::$app->request;
         $user_date = Yii::$app->session['user_date'];
@@ -101,6 +107,10 @@ class OrderController extends  Controller
             $date = $request->post();
             $goods_date = json_decode($date['date'], true);
 
+            $goods_count = 0;
+            foreach ($goods_date as $key=>$value){
+                $goods_count = $goods_count+$value['goods_number'];
+            }
             //生成唯一订单号
             @date_default_timezone_set("PRC");
             $order_date = date('Y-m-d');
@@ -127,11 +137,27 @@ class OrderController extends  Controller
                 'confirm_time'=>time(),
                 'pay_note'=>$date['remarks'],
                 'idcard'=>$date['id_card'],
+                'goods_count'=>$goods_count,
+                'update_time'=>time(),
             ];
 
             $bool = EcsOrderInfo::add($goods_date,$order_date);
 
 
+        }
+    }
+
+    public function actionAllOrder(){
+        $user_date = Yii::$app->session['user_date'];
+        $request = Yii::$app->request;
+        if($user_date){
+            $type = $request->get('type');
+            $type = 1;
+            $order_date = EcsOrderInfo::order_date($user_date,$type);
+
+            return $this->render('allorder');
+        }else{
+            return $this->redirect('/login/login');
         }
     }
 }
