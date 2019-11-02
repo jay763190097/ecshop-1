@@ -74,7 +74,7 @@ use yii\helpers\Url;
 
                             <li class="c">
 
-                                <input type="text" name="cggoodsnum" id="cggoodsnum" value="1" readonly="readonly"/>
+                                <input type="text" name="cggoodsnum" id="cggoodsnum" value="<?php echo $value['goods_number']?>" data-number = "<?php echo $value['number']?>" readonly="readonly"/>
 
                             </li>
 
@@ -343,17 +343,27 @@ use yii\helpers\Url;
 
             var num = $(this).siblings(".c").children('input').val();
 
+            var max_number = $(this).siblings(".c").children('input').attr('data-number');
+            console.log(max_number);
+
             var price = $(this).parent().siblings(".jiagearea").find(".howmuch").text();
 
-            var new_price = (Number(num)+1)*Number(price);
+            if((Number(num)+1) > max_number){
+                layer.msg("购买数量不能大于商品库存量");
+            }else{
+                var new_price = (Number(num)+1)*Number(price);
 
-            $(this).siblings(".c").children('input').val(Number(num)+1);
+                var new_num = $(this).siblings(".c").children('input').val(Number(num)+1);
 
-            if($(this).parents("li").find('.imgarea').hasClass('selectmoren')){
 
-                total();
 
+                if($(this).parents("li").find('.imgarea').hasClass('selectmoren')){
+
+                    total();
+
+                }
             }
+
 
         });
 

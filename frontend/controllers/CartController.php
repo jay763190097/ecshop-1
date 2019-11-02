@@ -91,6 +91,7 @@ class CartController extends Controller
         $user_id = $user_name['user_id'];
 
         $cart_date = EcsCart::cartdate($user_id);
+//        var_dump($cart_date);die;
 
         return $this->render('index',['cart_date'=>$cart_date]);
 

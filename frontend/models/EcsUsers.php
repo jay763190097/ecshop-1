@@ -235,11 +235,8 @@ class EcsUsers extends \yii\db\ActiveRecord
 
 
     public static function edit($data,$id){
-
-
-
+        $data['update_time'] = time();
         $res = Yii::$app->db->createCommand()->update('ecs_users', $data, ['user_id'=>$id])->execute();
-
         return $res;
 
     }

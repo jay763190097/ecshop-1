@@ -182,7 +182,7 @@ class EcsCart extends \yii\db\ActiveRecord
 
         $date = self::find()
 
-                ->select('ecs_cart.*,ecs_goods.goods_thumb')
+                ->select('ecs_cart.*,ecs_goods.goods_thumb,ecs_goods.goods_number as number')
 
                 ->join('left join','ecs_goods','ecs_goods.goods_id = ecs_cart.goods_id')
 

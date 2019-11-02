@@ -205,7 +205,6 @@ class MyController extends Controller
     public function actionInfo(){
 
         $user_date = Yii::$app->session['user_date'];
-
         if($user_date){
 
             $user = EcsUsers::find()->andWhere(['user_id'=>$user_date['user_id']])->asArray()->one();
@@ -221,15 +220,150 @@ class MyController extends Controller
     }
 
 
+    /**
+     * 更换手机号码
+     * @return array|string|Response
+     * @throws \yii\db\Exception
+     */
+    public function actionModifyPhone(){
+        $user_date = Yii::$app->session['user_date'];
+        $request = Yii::$app->request;
+        if($request->isPost){
+            Yii::$app->response->format=Response::FORMAT_JSON;
+            define('IN_ECS','aaa');
+            include 'sms/cls_sms.php';
+            $date = $request->post('mobile');
+            //调用发送验证码
+            $sms = new \sms();
+            $code = rand ( 1000, 9999 );
+            $logincode = $sms->send($date,$code);
+            if($logincode){
+                Yii::$app->db->createCommand()->insert('ecs_user_code',
+                    [
+                        'phone'     => $date,
+                        'code'      => $code,
+                        'res'      => 0,
+                        'date'      => date('Y-m-d H:i:s',time()),
+                        'add_time'  =>time()
+                    ])->execute();
+                return ['code'=>'20000','message'=>'发送成功！','mobile'=>$date];
+            }else{
+                return ['code'=>'50000','message'=>'发送失败！'];
+            }
+        }
+        if($user_date){
+            $mobile = $user_date['mobile_phone'];
+            $xing = substr($mobile,3,4);  //获取手机号中间四位
+            $mobile_old = str_replace($xing,'****',$mobile);  //用****进行替换
+            return $this->render('modifyphone',['user_date'=>$user_date,'mobile'=>$mobile_old]);
+        }else{
+            return $this->redirect('/login/login');
+        }
+    }
 
     /**
-
-     * 上传头像
-
-     * @return false|string
-
+     * 更换手机的验证码
+     * @return string
      */
+    public function actionModifyphonecode(){
+        $request = Yii::$app->request;
+        if($request->isPost){
+            Yii::$app->response->format=Response::FORMAT_JSON;
+            $date = $request->post();
+            $rule = LoginController::Verification($date['mobile'],$date['code']);
+            if($rule != 1){
+                return ['code'=>'50000','message'=> $rule];
+            }else{
+                return ['code'=>'20000','message'=>'验证成功！'];
+            }
+        }
+        $mobile = $request->get('mobile');
+        $xing = substr($mobile,3,4);  //获取手机号中间四位
+        $mobile_old = str_replace($xing,'****',$mobile);  //用****进行替换
+        return $this->render('modifyphonecode',['mobile'=>$mobile,'mobile_old'=>$mobile_old]);
+    }
 
+    /**
+     * 新手机号码
+     * @return array|string
+     * @throws \yii\db\Exception
+     */
+    public function actionNewphone(){
+        $request = Yii::$app->request;
+        if($request->isPost){
+            Yii::$app->response->format=Response::FORMAT_JSON;
+            define('IN_ECS','aaa');
+            include 'sms/cls_sms.php';
+            $date = $request->post('mobile');
+            if(LoginController::Is_mobile($date)){
+                $rule = EcsUsers::find()->andWhere(['mobile_phone'=>$date])->asArray()->one();
+                if($rule){
+                    return ['code'=>'50000','message'=>'手机号码已经存在！'];
+                }else{
+                    //调用发送验证码
+                    $sms = new \sms();
+                    $code = rand ( 1000, 9999 );
+                    $logincode = $sms->send($date,$code);
+                    if($logincode){
+                        Yii::$app->db->createCommand()->insert('ecs_user_code',
+                            [
+                                'phone'     => $date,
+                                'code'      => $code,
+                                'res'      => 0,
+                                'date'      => date('Y-m-d H:i:s',time()),
+                                'add_time'  =>time()
+                            ])->execute();
+
+                        return ['code'=>'20000','message'=>'发送成功！','mobile'=>$date];
+                    }else{
+                        return ['code'=>'50000','message'=>'发送失败！'];
+                    }
+                }
+            }else{
+                return ['code'=>'50000','message'=>'该手机号码不合法！'];
+            }
+
+        }
+        return $this->render('newphone');
+    }
+
+    /**
+     * 新手机验证码
+     * @return array|string
+     */
+    public function actionNewcode(){
+        $request = Yii::$app->request;
+        if($request->isPost){
+            $date = $request->post();
+            Yii::$app->response->format=Response::FORMAT_JSON;
+            $rule = LoginController::Verification($date['mobile_phone'],$date['code']);
+            if($rule != 1){
+                return ['code'=>'50000','message'=> $rule];
+            }else{
+                $user_date = Yii::$app->session['user_date'];
+                $user_id = $user_date['user_id'];
+                unset($date['code']);
+                $bool = EcsUsers::edit($date,$user_id);
+                if($bool){
+                    $new_user = EcsUsers::find()->andWhere(['mobile_phone'=>$date['mobile_phone']])->asArray()->one();
+                    yii::$app->session['user_date']=$new_user;
+                    return ['code'=>'20000','message'=>'修改成功！'];
+                }else{
+                    return ['code'=>'50000','message'=>'修改失败！'];
+                }
+            }
+
+        }
+        $mobile = $request->get('mobile');
+        $xing = substr($mobile,3,4);  //获取手机号中间四位
+        $mobile_old = str_replace($xing,'****',$mobile);  //用****进行替换
+        return $this->render('newcode',['mobile'=>$mobile,'mobile_old'=>$mobile_old]);
+    }
+
+    /**
+     * 上传头像
+     * @return false|string
+     */
     public function actionUpload(){
 
         $request = Yii::$app->request;

@@ -2,20 +2,21 @@
 /**
  * Created by PhpStorm.
  * User: Administrator
- * Date: 2019/10/31 0031
- * Time: 23:36
+ * Date: 2019/11/2 0002
+ * Time: 23:48
  */
+use yii\helpers\Url;
 ?>
 <?php $this->beginBlock('self_css'); ?>
-
 <?php $this->endBlock(); ?>
 <body class="white">
 <header id="head" class='info_my'>
        	   <span class="last" onclick="history.go(-1)">
-       	   	 <img src="/images/last.png"/>
+       	   	 <img src="images/last.png"/>
        	   </span>
     <h3 class="info_about"></h3>
 </header>
+<h3 class="write_code">输入验证码</h3>
 <span class="reserver">短信已发送至 <?php echo $mobile_old?></span>
 <input type="hidden" id="mobile" value="<?php echo $mobile?>">
 
@@ -27,8 +28,10 @@
 </div>
 <span class="reget">60s后可重新获取</span>
 <span class="re_get">重发短信验证码</span>
+
 <?php $this->beginBlock('self_js'); ?>
 <script src="/js/common.js"></script>
+
 <script>
     var wait = 60;
     function time() {
@@ -72,7 +75,7 @@
             }
         });
         $("input[name='num4']").keyup(function(){
-            if($("input[name='num2']").val()!="" && $("input[name='num2']").val()!="" && $("input[name='num3']").val()!="" && $("input[name='num4']").val()!=""){
+            if($("input[name='num1']").val()!="" && $("input[name='num2']").val()!="" && $("input[name='num3']").val()!="" && $("input[name='num4']").val()!=""){
                 var  mobile = $("#mobile").val();
                 var num1 = $("input[name='num1']").val();
                 var num2 = $("input[name='num2']").val();
@@ -81,23 +84,24 @@
                 var code = num1+num2+num3+num4
 
                 $.ajax({
-                    url:"/login/verification",
+                    url:"",
                     type:"POST",
                     dataType:"json",
-                    data:{mobile:mobile,code:code},
+                    data:{mobile_phone:mobile,code:code},
                     success:function(res){
                         if(res.code == 20000){
                             layer.msg(res.message);
                             setTimeout(function(){
-                                window.location.href = "/index/index";
+                                window.location.href = "/my/info";
                             },2000);
                         }else{
                             layer.msg(res.message);
-                            window.location.href = "/login/login";
+                            setTimeout(function(){
+                                window.location.reload();
+                            },2000);
                         }
                     },
                 });
-
             }
         });
 
