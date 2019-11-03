@@ -6,7 +6,7 @@
     <header id="head">
         <div class="search_icon white radius50">
             <img src="/images/search.png"/>
-            <input type="search" placeholder="搜索商品" value="" name="goods_name" class="goods_name"/>
+            <input type="search" placeholder="搜索商品" value="<?=empty($_GET['goods_name'])?'':$_GET['goods_name']?>" name="goods_name" class="goods_name"/>
         </div>
     </header>
     <ul class="classfi">
@@ -61,11 +61,11 @@
 
             <?php foreach ($type_list as $k => $v) { ?>
                 <div class="condition_1">
-                    <span><?= $v['attr_name'] ?>：</span>
+                    <span><?= $v['cat_name'] ?>：</span>
                     <ul class="condition_1_list">
-                        <?php foreach ($v['attr_values'] as $key) { ?>
-                            <li data-id="<?= $v['attr_id'] ?>" data-value="<?= $key ?>">
-                                <span><?= $key ?></span>
+                        <?php foreach ($v['son_list'] as $key) { ?>
+                            <li data-id="<?= $key['cat_id'] ?>" data-value="<?= $key['cat_id'] ?>">
+                                <span><?= $key['cat_name'] ?></span>
                             </li>
                         <?php } ?>
                     </ul>

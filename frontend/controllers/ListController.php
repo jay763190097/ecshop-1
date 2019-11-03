@@ -4,7 +4,6 @@
 namespace frontend\controllers;
 
 
-use frontend\method\Method;
 use frontend\models\Activity;
 use frontend\models\Attribute;
 use frontend\models\Collect;
@@ -12,7 +11,6 @@ use frontend\models\Comment;
 use frontend\models\Goods;
 use frontend\models\GoodsAttr;
 use frontend\models\RedType;
-use frontend\models\TypeAttr;
 use frontend\models\UserRed;
 use yii\web\Controller;
 
@@ -36,13 +34,9 @@ class ListController extends Controller
 
         if ($request->isAjax) {
 
-            $shop_ids = explode(',', $info['act_range_ext']);
-
             $page = $request->get('page');
 
-            $shop_ids = array_slice($shop_ids, ($page - 1) * 10, 10);
-
-            $data = Goods::getShopByTypePage(0, 1, 10, ['in', Goods::tableName() . '.goods_id', $shop_ids]);
+            $data = Goods::getShopByActive(0, $page, 10, ['is_promote'=>1]);
 
             return json_encode($data);
 

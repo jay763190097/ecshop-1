@@ -23,3 +23,18 @@
     if (!doc.addEventListener) return;
     win.addEventListener(resizeEvt, recalc, false);
 })(document, window);
+
+//跳转之后获取参数判断默认显示哪种状态;
+function getUrlPara(paraName) {
+    var sUrl = location.href;
+    var sReg = "(?://?|&){1}" + paraName + "=([^&]*)" ;
+    var re = new RegExp(sReg, "g");
+    re.exec(sUrl);
+    return RegExp.$1;
+}
+
+function getUrlParaanes(name){
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return decodeURI(r[2]); return null;
+}

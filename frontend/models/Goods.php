@@ -35,7 +35,7 @@ class Goods extends ActiveRecord
             $where['suppliers_id'] = $type;
         }
 
-        $select = ['goods_id', 'goods_name', 'virtual_sales', 'goods_thumb', 'shop_price', 'suppliers_id'];
+        $select = ['goods_id', 'goods_name', 'virtual_sales', 'goods_thumb', 'shop_price', 'suppliers_id','promote_price'];
 
         $list = self::find()
             ->where($where)
@@ -56,6 +56,50 @@ class Goods extends ActiveRecord
         return $list;
 
     }
+
+
+
+    /**
+     * @param $type 0：不限；1：自营；2：海淘
+     * @param $page 页数
+     * @param $limit 显示的个数
+     * @return array|ActiveRecord[]
+     * 得到商品列表
+     */
+    public static function getShopByActive($type, $page, $limit, $andWher = [])
+    {
+
+        $where = ['is_delete' => 0, 'is_alone_sale' => 1, 'is_on_sale' => 1];
+
+        if (!empty($type)) {
+            $where['suppliers_id'] = $type;
+        }
+
+        $select = ['goods_id', 'goods_name', 'virtual_sales', 'goods_thumb', 'shop_price', 'suppliers_id','promote_price'];
+
+        $list = self::find()
+            ->where($where)
+            ->andWhere($andWher)
+            ->andWhere(['<','promote_start_date',time()])
+            ->andWhere(['>','promote_end_date',time()])
+            ->orderBy('click_count desc')
+            ->limit($limit)
+            ->offset(($page - 1) * $limit)
+            ->select($select)
+            ->asArray()
+            ->all();
+
+        foreach ($list as $k => $v) {
+
+            $list[$k]['goods_thumb'] = \Yii::$app->params['admin_url'] . '/' . $v['goods_thumb'];
+
+        }
+
+        return $list;
+
+    }
+
+
 
 
     /**
@@ -116,6 +160,8 @@ class Goods extends ActiveRecord
 
         $goods_name = self::tableName();
 
+        $goods_cat = GoodsCat::tableName();
+
         $where = [$goods_name . '.is_delete' => 0, $goods_name . '.is_alone_sale' => 1, $goods_name . '.is_on_sale' => 1];
 
         if (!empty($type)) {
@@ -127,7 +173,8 @@ class Goods extends ActiveRecord
         $list = self::find()
             ->where($where)
             ->andWhere($andWher)
-            ->join('join', $goods_attr, $goods_attr . '.goods_id=' . $goods_name . '.goods_id')
+//            ->join('join', $goods_attr, $goods_attr . '.goods_id=' . $goods_name . '.goods_id')
+                ->join('join',$goods_cat,$goods_cat.'.goods_id='.$goods_name.'.goods_id')
             ->orderBy($goods_name . '.click_count desc')
             ->limit($limit)
             ->offset(($page - 1) * $limit)
@@ -139,7 +186,8 @@ class Goods extends ActiveRecord
         $count = self::find()
             ->where($where)
             ->andWhere($andWher)
-            ->join('join', $goods_attr, $goods_attr . '.goods_id=' . $goods_name . '.goods_id')
+//            ->join('join', $goods_attr, $goods_attr . '.goods_id=' . $goods_name . '.goods_id')
+            ->join('join',$goods_cat,$goods_cat.'.goods_id='.$goods_name.'.goods_id')
             ->groupBy(self::tableName().'.goods_id')
             ->count();
 
@@ -162,6 +210,10 @@ class Goods extends ActiveRecord
 
         $goodsAttr_name = GoodsAttr::tableName();//商品属性表
 
+//        $category_name = Category::tableName();
+
+        $goodsCat_name = GoodsCat::tableName();
+
         $select = [$table_name . '.goods_id', $table_name . '.goods_name', $table_name . '.virtual_sales', $table_name . '.goods_thumb', $table_name . '.shop_price', $table_name . '.suppliers_id'];
 
 
@@ -173,7 +225,9 @@ class Goods extends ActiveRecord
             ->andWhere($like)
             ->andWhere($where)
             ->andWhere($andWhere)
-            ->join('join', $goodsAttr_name, $goodsAttr_name . '.goods_id=' . $table_name . '.goods_id')
+//            ->join('join', $goodsAttr_name, $goodsAttr_name . '.goods_id=' . $table_name . '.goods_id')
+            ->join('join',$goodsCat_name,$goodsCat_name.'.goods_id='.$table_name.'.goods_id')
+//            ->join('join',$category_name,$category_name.'.cat_id='.$goodsCat_name.'.goods_id')
             ->limit(10)
             ->offset(($page - 1) * 10)
             ->orderBy($order)
@@ -190,14 +244,18 @@ class Goods extends ActiveRecord
 //                    $table_name . '.is_alone_sale' => 1,
 //                    $table_name . '.is_delete' => 0,
 //                ])
+//                ->andWhere($like)
 //                ->andWhere($where)
 //                ->andWhere($andWhere)
-//                ->join('join', $goodsAttr_name, $goodsAttr_name . '.goods_id=' . $table_name . '.goods_id')
+////            ->join('join', $goodsAttr_name, $goodsAttr_name . '.goods_id=' . $table_name . '.goods_id')
+//                ->join('join',$goodsCat_name,$goodsCat_name.'.goods_id='.$table_name.'.goods_id')
+////            ->join('join',$category_name,$category_name.'.cat_id='.$goodsCat_name.'.goods_id')
 //                ->limit(10)
 //                ->offset(($page - 1) * 10)
 //                ->orderBy($order)
 //                ->select($select)
-//                ->groupBy($table_name.'.goods_id')->createCommand()->getRawSql()
+//                ->groupBy($table_name . '.goods_id')
+//            ->createCommand()->getRawSql()
 //
 //        );exit();
 
@@ -208,7 +266,8 @@ class Goods extends ActiveRecord
             ])
             ->andWhere($where)
             ->andWhere($andWhere)
-            ->join('join', $goodsAttr_name, $goodsAttr_name . '.goods_id=' . $table_name . '.goods_id')
+//            ->join('join', $goodsAttr_name, $goodsAttr_name . '.goods_id=' . $table_name . '.goods_id')
+            ->join('join',$goodsCat_name,$goodsCat_name.'.goods_id='.$table_name.'.goods_id')
             ->groupBy($table_name . '.goods_id')
             ->count();
 
@@ -269,7 +328,9 @@ class Goods extends ActiveRecord
             $table_name . '.is_promote',//是否特价促销；0，否；1，是
             $table_name . '.goods_id',
             $table_name.'.goods_img',
-            $table_name.'.goods_number'
+            $table_name.'.goods_number',
+            $table_name.'.promote_start_date',
+            $table_name.'.promote_end_date'
         ];
 
         $info = self::find()
@@ -296,8 +357,10 @@ class Goods extends ActiveRecord
 
         $info['price'] = $info['shop_price'];
 
-        if ($info['is_promote'] == 1) {
+        if ($info['is_promote'] == 1 && $info['promote_start_date'] < time() && $info['promote_end_date'] > time()) {
             $info['price'] = $info['promote_price'];
+        }else{
+            $info['is_promote'] = 0;
         }
 
         return $info;

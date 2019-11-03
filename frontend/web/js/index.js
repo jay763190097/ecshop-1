@@ -21,7 +21,9 @@ $(document).ready(function () {
     function getList(type = 0) {
 
 
-        console.log(page, count_page);
+        // console.log(page, count_page);
+
+        console.log('type' + type);
 
         if (page <= count_page) {
             $.ajax({

@@ -7,8 +7,10 @@ namespace frontend\controllers;
 use frontend\method\Method;
 use frontend\models\Activity;
 use frontend\models\Article;
+use frontend\models\Category;
 use frontend\models\Goods;
 use frontend\models\GoodsAttr;
+use frontend\models\GoodsCat;
 use frontend\models\Search;
 use frontend\models\TypeAttr;
 use Symfony\Component\DomCrawler\Field\InputFormField;
@@ -72,22 +74,24 @@ class IndexController extends Controller
 
         $goods_attr = GoodsAttr::tableName();
 
+        $goods_cat = GoodsCat::tableName();
+
         $andWhere = [];
         switch ($type) {
             case 0:
                 $andWhere = [$goods_name . '.is_best' => 1];
                 break;
             case 1:
-                $andWhere = [$goods_attr . '.attr_value' => '日抛'];
+                $andWhere = [$goods_cat . '.cat_id' => 35];
                 break;
             case 2:
-                $andWhere = [$goods_attr . '.attr_value' => '双周抛'];
+                $andWhere = [$goods_cat . '.cat_id' => 37];
                 break;
             case 3:
-                $andWhere = [$goods_attr . '.attr_value' => '月抛'];
+                $andWhere = [$goods_cat . '.cat_id' => 36];
                 break;
             case 4:
-                $andWhere = [$goods_attr . '.attr_value' => '透明片'];
+                $andWhere = [$goods_cat . '.cat_id' => 53];
                 break;
             default:
 
@@ -120,7 +124,9 @@ class IndexController extends Controller
 
         $type = \Yii::$app->request->get('action', 0);
 
-        $type_list = TypeAttr::getDataByTypeId();
+//        $type_list = TypeAttr::getDataByTypeId();
+
+        $type_list = Category::getDataAll();
 
         $list = Goods::getShopByType($type, 0, 8, ['like', Goods::tableName() . '.goods_name', $goods_name]);
 
@@ -185,13 +191,13 @@ class IndexController extends Controller
 
             $goodsAttr_name = GoodsAttr::tableName();
 
+            $goodsCat_name = GoodsCat::tableName();
 
             $andWhere = ['or'];
             foreach ($typeAttr as $k => $v) {
                 $type_where = [];
                 $type_where = ['and'];
-                $type_where[] = [$goodsAttr_name . '.attr_id' => $k];
-                $type_where[] = [$goodsAttr_name . '.attr_value' => $v];
+                $type_where[] = [$goodsCat_name . '.cat_id' => $k];
 
                 $andWhere[] = $type_where;
 

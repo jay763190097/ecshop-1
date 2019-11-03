@@ -58,7 +58,7 @@ class Activity extends ActiveRecord
 
         $info = self::find()
 
-            ->where(['act_range' => 3])
+//            ->where(['act_range' => 3])
 
             ->select(['gift', 'act_range_ext','start_time', 'end_time'])
 
@@ -67,36 +67,19 @@ class Activity extends ActiveRecord
             ->one();
 
 
-
         if (!empty($info)) {
 
-
-
-            $shop_ids = explode(',', $info['act_range_ext']);
-
-
-
-            $list = Goods::getShopByType(0, 1, 3,['in','goods_id',$shop_ids]);
-
-
+            $list = Goods::getShopByActive(0, 1, 3,['is_promote'=>1]);
 
             $used_time = Method::timediff(time(),(int)$info['end_time']);
-
-
 
             $info['list'] = $list;
 
             $info['used_time'] = $used_time;
 
-
-
             return $info;
 
-
-
         }
-
-
 
         return 0;
 

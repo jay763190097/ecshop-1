@@ -3,7 +3,7 @@
 <?php $this->beginBlock('self_css'); ?>
     <style>
 
-        .three_icons img{
+        .three_icons img {
             width: 100%;
         }
 
@@ -24,25 +24,25 @@
         <div class="swiper-pagination swiper-pag3"></div>
     </div>
     <div class="prize_block">
-
+        
         <?php if ($info['is_promote'] == 1) { ?>
-
-            <div class="prize_L">
-                <i>&yen;</i><span><?= $info['promote_price'] ?></span>
+            <div class="prize_block">
+                <div class="prize_L">
+                    <i>&yen;</i><span><?= $info['promote_price'] ?></span>
+                </div>
+                <div class="prize_R">
+                    <span>&yen;<?= $info['shop_price'] ?></span>
+                    <span>限时优惠</span>
+                </div>
             </div>
-
-            <div class="prize_R">
-                <span>&yen;<?= $info['shop_price'] ?></span>
-                <span>限时优惠</span>
-            </div>
-
         <?php } else { ?>
-
-            <div class="prize_L">
-                <i>&yen;</i><span><?= $info['shop_price'] ?></span>
+            <div class="prize_block prize_block2">
+                <div class="prize_L">
+                    <i>&yen;</i><span><?= $info['shop_price'] ?></span>
+                </div>
             </div>
-
         <?php } ?>
+
 
     </div>
     <p class="details_name">
@@ -212,7 +212,7 @@
     <div class="Specifications_block" type='0'>
     <div class="Specifications_block_001">
         <div class="img_areas">
-            <img src="<?=$info['goods_img']?>"/>
+            <img src="<?= $info['goods_img'] ?>"/>
         </div>
         <div class="goods_prizes_area">
             <span>&yen;<?= $info['price'] ?></span>
@@ -521,7 +521,9 @@
                         } else {
                             layer.msg(data.msg);
 
-                            location.href='/login/login';
+                            setTimeout(function () {
+                                location.href = '/login/login';
+                            }, 500)
                         }
 
                     }
@@ -550,7 +552,9 @@
                             div.html('立即使用');
                             div.addClass('used').removeClass('quick_get');
                         } else {
-                            location.href = '/login/login';
+                            setTimeout(function () {
+                                location.href = '/login/login';
+                            }, 500)
                         }
                     }
                 })
@@ -625,8 +629,10 @@
                                 $(".shoucang").children("img").attr("src", "/images/yishoucang.png");
                                 $(".shoucang").children("span").text("已收藏");
                                 $(".shoucang").attr("type", "true");
-                            }else{
-                                location.href = '/login/login';
+                            } else {
+                                setTimeout(function () {
+                                    location.href = '/login/login';
+                                }, 500)
                             }
                         }
                     })
