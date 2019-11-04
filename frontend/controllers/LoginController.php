@@ -189,8 +189,93 @@ class LoginController extends Controller
         return $this->render('code',['mobile'=>$mobile,'mobile_old'=>$mobile_old]);
     }
 
+    /**
+     * 忘记密码
+     * @return array|string|Response
+     * @throws \yii\db\Exception
+     */
     public function actionForgotPassword(){
-        return $this->render('forgotpassword');
+        $user_date = Yii::$app->session['user_date'];
+        $request = Yii::$app->request;
+        if($request->isPost) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            define('IN_ECS','aaa');
+            include 'sms/cls_sms.php';
+            $date = $request->post();
+            if(self::Is_mobile($date['mobile_phone'])){
+                $sms = new \sms();
+                $code = rand ( 1000, 9999 );
+                $logincode = $sms->send($date['mobile_phone'],$code);
+                if($logincode){
+                    Yii::$app->db->createCommand()->insert('ecs_user_code',
+                        [
+                            'phone'     => $date['mobile_phone'],
+                            'code'      => $code,
+                            'res'      => 0,
+                            'date'      => date('Y-m-d H:i:s',time()),
+                            'add_time'  =>time()
+                        ])->execute();
+
+                    return ['code'=>'20000','message'=>'发送成功！','mobile'=>$date['mobile_phone']];
+                }else{
+                    return ['code'=>'50000','message'=>'发送失败！'];
+                }
+            }else{
+                return ['code'=>'50000','message'=> '该手机号码不合法'];
+            }
+
+        }
+        if($user_date){
+            return $this->render('forgotpassword');
+        }else{
+            return $this->redirect('/login/login');
+        }
+    }
+
+    /**
+     * 忘记密码验证码验证
+     * @return array|string
+     */
+    public function actionForgotcode(){
+        $request = Yii::$app->request;
+        if($request->isPost){
+            Yii::$app->response->format=Response::FORMAT_JSON;
+            $date = $request->post();
+            $rule = self::Verification($date['mobile_phone'],$date['code']);
+            if($rule != 1){
+                return ['code'=>'50000','message'=> $rule];
+            }else{
+                return ['code'=>'20000','message'=>'验证成功！'];
+            }
+        }
+        $mobile = $request->get('mobile');
+        $xing = substr($mobile,3,4);  //获取手机号中间四位
+        $mobile_old = str_replace($xing,'****',$mobile);  //用****进行替换
+        return $this->render('forgotcode',['mobile'=>$mobile,'mobile_old'=>$mobile_old]);
+    }
+
+    public function actionNewPassword(){
+        $request = Yii::$app->request;
+        if($request->isPost){
+            $user_date = Yii::$app->session['user_date'];
+            Yii::$app->response->format=Response::FORMAT_JSON;
+            $date = $request->post();
+            if($date['password1'] != $date['password2']){
+                return ['code'=>'50000','message'=> '请确认两次输入的密码是否一致！'];
+            }
+            $update = [
+                'password'=>md5($date['password1'])
+            ];
+
+            $bool = EcsUsers::edit($update,$user_date['user_id']);
+
+            if($bool){
+                return ['code'=>'20000','message'=> '修改成功！'];
+            }else{
+                return ['code'=>'50000','message'=>'修改失败！'];
+            }
+        }
+        return $this->render('newpassword');
     }
     /**
      * 退出登录

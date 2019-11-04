@@ -205,6 +205,32 @@ class MyController extends Controller
     public function actionInfo(){
 
         $user_date = Yii::$app->session['user_date'];
+        $request = Yii::$app->request;
+        if($request->isPost) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $date = $request->post();
+            switch ($date['sex']){
+                case '保密':
+                    $date['sex'] = 0;
+                    break;
+                case '男':
+                    $date['sex'] = 1;
+                    break;
+                default:
+                    $date['sex'] = 2;
+            }
+            $bool = EcsUsers::edit($date,$date['user_id']);
+            if($bool){
+
+                return ['code'=>'20000','message'=>'保存成功！'];
+
+            }else{
+
+                return ['code'=>'50000','message'=>'保存失败！'];
+
+            }
+
+        }
         if($user_date){
 
             $user = EcsUsers::find()->andWhere(['user_id'=>$user_date['user_id']])->asArray()->one();
