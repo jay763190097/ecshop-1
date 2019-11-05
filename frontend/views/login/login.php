@@ -132,7 +132,7 @@
                 success:function(res){
                     if(res.code == 20000){
                         layer.msg(res.message);
-                        history.go(-1)
+                        window.location.href = "/index/index";
                     }else{
                         layer.msg(res.message);
                     }

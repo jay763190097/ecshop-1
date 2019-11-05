@@ -362,15 +362,15 @@ class EcsOrderInfo extends \yii\db\ActiveRecord
 
         //待付款
 
-        $obligationcount = self::find()->andWhere(['user_id'=>$user_id,'pay_status'=>0,'is_del'=>1])->count();
+        $obligationcount = self::find()->andWhere(['user_id'=>$user_id,'pay_status'=>0,'order_status'=>1,'is_del'=>1])->count();
 
         //待收货
 
-        $receivingcount = self::find()->andWhere(['user_id'=>$user_id,'shipping_status'=>1,'is_del'=>1])->count();
+        $receivingcount = self::find()->andWhere(['user_id'=>$user_id,'shipping_status'=>1,'pay_status'=>2,'is_del'=>1])->count();
 
         //未评论
 
-        $commentcount = self::find()->andWhere(['user_id'=>$user_id,'is_del'=>1,'shipping_status'=>2])->count();
+        $commentcount = self::find()->andWhere(['user_id'=>$user_id,'is_del'=>1,'shipping_status'=>2,'pay_status'=>2])->count();
 
         //退换货
 
@@ -425,7 +425,7 @@ class EcsOrderInfo extends \yii\db\ActiveRecord
         if(empty($type)){
             return $orderList;
         }else{
-            if($type == 1){
+            if($type == "5"){
                 $date = self::find()
                     ->select('ecs_order_info.order_sn,ecs_order_info.order_status,ecs_order_info.shipping_status,ecs_order_info.pay_status,ecs_order_info.goods_amount,ecs_order_info.goods_count,
                     ecs_order_goods.goods_name,ecs_order_goods.goods_number,ecs_order_goods.market_price,ecs_order_goods.goods_price,ecs_order_goods.goods_attr,ecs_order_goods.goods_attr_id,ecs_order_goods.goods_id,
@@ -466,7 +466,7 @@ class EcsOrderInfo extends \yii\db\ActiveRecord
                 ];
             }
 
-
+            return $orderList;
         }
     }
 }

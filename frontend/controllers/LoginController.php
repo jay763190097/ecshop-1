@@ -254,6 +254,10 @@ class LoginController extends Controller
         return $this->render('forgotcode',['mobile'=>$mobile,'mobile_old'=>$mobile_old]);
     }
 
+    /**
+     * 修改密码
+     * @return array|string
+     */
     public function actionNewPassword(){
         $request = Yii::$app->request;
         if($request->isPost){

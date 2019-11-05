@@ -147,15 +147,17 @@ class OrderController extends  Controller
         }
     }
 
+    /**
+     * 订单信息
+     * @return string|Response
+     */
     public function actionAllOrder(){
         $user_date = Yii::$app->session['user_date'];
         $request = Yii::$app->request;
         if($user_date){
             $type = $request->get('type');
-            $type = 1;
             $order_date = EcsOrderInfo::order_date($user_date,$type);
-
-            return $this->render('allorder');
+            return $this->render('myorder',['date' =>$order_date,'type'=>$type]);
         }else{
             return $this->redirect('/login/login');
         }

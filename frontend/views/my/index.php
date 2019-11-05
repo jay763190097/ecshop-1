@@ -54,7 +54,7 @@ use yii\helpers\Url;
 
     <span>我的订单</span>
 
-    <a href="">全部订单 <img src="/images/nextpage2.png"></a>
+    <a href="<?php echo Url::to(['/order/all-order?type=5']) ?>">全部订单 <img src="/images/nextpage2.png"></a>
 
 </div>
 
