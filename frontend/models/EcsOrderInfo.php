@@ -420,28 +420,72 @@ class EcsOrderInfo extends \yii\db\ActiveRecord
         }
     }
 
+    /**
+     * 我的订单信息
+     * @param $user_id
+     * @param $type
+     * @return array
+     */
     public static function order_date($user_id,$type){
         $orderList = [];
-        if(empty($type)){
-            return $orderList;
-        }else{
-            if($type == "5"){
-                $date = self::find()
-                    ->select('ecs_order_info.order_sn,ecs_order_info.order_status,ecs_order_info.shipping_status,ecs_order_info.pay_status,ecs_order_info.goods_amount,ecs_order_info.goods_count,
-                    ecs_order_goods.goods_name,ecs_order_goods.goods_number,ecs_order_goods.market_price,ecs_order_goods.goods_price,ecs_order_goods.goods_attr,ecs_order_goods.goods_attr_id,ecs_order_goods.goods_id,
-                    ecs_goods.goods_thumb')
-                    ->join('left join','ecs_order_goods','ecs_order_info.order_id = ecs_order_goods.order_id')
-                    ->join('left join','ecs_goods','ecs_goods.goods_id = ecs_order_goods.goods_id')
-                    ->andWhere(['ecs_order_info.user_id'=>$user_id])
-                    ->orderBy('ecs_order_info.update_time desc')
-                    ->asArray()
-                    ->all();
-            }
+        if($type == 5){
+            $date = EcsOrderGoods::find()
+                ->select('ecs_order_info.order_id,ecs_order_info.order_sn,ecs_order_info.order_status,ecs_order_info.shipping_status,ecs_order_info.pay_status,ecs_order_info.goods_amount,ecs_order_info.goods_count,
+            ecs_order_goods.order_id as goodes_order_id,ecs_order_goods.goods_name,ecs_order_goods.goods_number,ecs_order_goods.market_price,ecs_order_goods.goods_price,ecs_order_goods.goods_attr,ecs_order_goods.goods_attr_id,ecs_order_goods.goods_id,
+            ecs_goods.goods_thumb')
+                ->join('left join','ecs_order_info','ecs_order_info.order_id = ecs_order_goods.order_id')
+                ->join('left join','ecs_goods','ecs_goods.goods_id = ecs_order_goods.goods_id')
+                ->andWhere(['ecs_order_info.user_id'=>$user_id])
+                ->orderBy('ecs_order_info.order_id desc')
+                ->asArray()
+                ->all();
+        }elseif ($type == 1){
+            $date = EcsOrderGoods::find()
+                ->select('ecs_order_info.order_id,ecs_order_info.order_sn,ecs_order_info.order_status,ecs_order_info.shipping_status,ecs_order_info.pay_status,ecs_order_info.goods_amount,ecs_order_info.goods_count,
+            ecs_order_goods.order_id as goodes_order_id,ecs_order_goods.goods_name,ecs_order_goods.goods_number,ecs_order_goods.market_price,ecs_order_goods.goods_price,ecs_order_goods.goods_attr,ecs_order_goods.goods_attr_id,ecs_order_goods.goods_id,
+            ecs_goods.goods_thumb')
+                ->join('left join','ecs_order_info','ecs_order_info.order_id = ecs_order_goods.order_id')
+                ->join('left join','ecs_goods','ecs_goods.goods_id = ecs_order_goods.goods_id')
+                ->andWhere(['ecs_order_info.user_id'=>$user_id])
+                ->andWhere(['ecs_order_info.pay_status'=>0])
+                ->orderBy('ecs_order_info.order_id desc')
+                ->asArray()
+                ->all();
+        }elseif ($type == 2){
+            $date = EcsOrderGoods::find()
+                ->select('ecs_order_info.order_id,ecs_order_info.order_sn,ecs_order_info.order_status,ecs_order_info.shipping_status,ecs_order_info.pay_status,ecs_order_info.goods_amount,ecs_order_info.goods_count,
+            ecs_order_goods.order_id as goodes_order_id,ecs_order_goods.goods_name,ecs_order_goods.goods_number,ecs_order_goods.market_price,ecs_order_goods.goods_price,ecs_order_goods.goods_attr,ecs_order_goods.goods_attr_id,ecs_order_goods.goods_id,
+            ecs_goods.goods_thumb')
+                ->join('left join','ecs_order_info','ecs_order_info.order_id = ecs_order_goods.order_id')
+                ->join('left join','ecs_goods','ecs_goods.goods_id = ecs_order_goods.goods_id')
+                ->andWhere(['ecs_order_info.user_id'=>$user_id])
+                ->andWhere(['ecs_order_info.pay_status'=>2])
+                ->andWhere(['ecs_order_info.shipping_status'=>1])
+                ->andWhere(['ecs_order_info.order_status'=>1])
+                ->orderBy('ecs_order_info.order_id desc')
+                ->asArray()
+                ->all();
+        }elseif ($type == 3){
+            $date = EcsOrderGoods::find()
+                ->select('ecs_order_info.order_id,ecs_order_info.order_sn,ecs_order_info.order_status,ecs_order_info.shipping_status,ecs_order_info.pay_status,ecs_order_info.goods_amount,ecs_order_info.goods_count,
+            ecs_order_goods.order_id as goodes_order_id,ecs_order_goods.goods_name,ecs_order_goods.goods_number,ecs_order_goods.market_price,ecs_order_goods.goods_price,ecs_order_goods.goods_attr,ecs_order_goods.goods_attr_id,ecs_order_goods.goods_id,
+            ecs_goods.goods_thumb')
+                ->join('left join','ecs_order_info','ecs_order_info.order_id = ecs_order_goods.order_id')
+                ->join('left join','ecs_goods','ecs_goods.goods_id = ecs_order_goods.goods_id')
+                ->andWhere(['ecs_order_info.user_id'=>$user_id])
+                ->andWhere(['ecs_order_info.pay_status'=>2])
+                ->andWhere(['ecs_order_info.shipping_status'=>2])
+                ->andWhere(['ecs_order_info.order_status'=>1])
+                ->orderBy('ecs_order_info.order_id desc')
+                ->asArray()
+                ->all();
+        }
 
-
+        if(!empty($date)){
             foreach ($date as $key=>$value){
                 if(!isset($orderList[ $value['order_sn'] ])){
                     $orderList[ $value['order_sn'] ] = [
+                        'order_id'=>$value['order_id'],
                         'orderSn' 	=> $value['order_sn'],
                         'goods_amount' => $value['goods_amount'],
                         'goods_count' => $value['goods_count'],
@@ -455,6 +499,7 @@ class EcsOrderInfo extends \yii\db\ActiveRecord
                 $value['goods_attr_id'] =  EcsGoodAttr::find()->andWhere(['in','goods_attr_id',explode(',',$value['goods_attr_id'])])->asArray()->all();
                 $attrdate = array_column($value['goods_attr_id'], 'attr_value');
                 $orderList[ $value['order_sn'] ]['list'][] = [
+                    'goodes_order_id'=>$value['goodes_order_id'],
                     'goods_id' => $value['goods_id'],
                     'goods_name' => $value['goods_name'],
                     'goods_number' => $value['goods_number'],
@@ -465,9 +510,8 @@ class EcsOrderInfo extends \yii\db\ActiveRecord
                     'goods_thumb' => $value['goods_thumb'],
                 ];
             }
-
+        }
             return $orderList;
         }
-    }
 }
 

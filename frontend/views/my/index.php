@@ -62,37 +62,44 @@ use yii\helpers\Url;
 
     <?php if(!empty($order)):?>
 
-        <li>
 
-            <span><?php echo $order['obligationcount']?></span>
+            <li>
+                <a href="<?php echo Url::to(['/order/all-order?type=1']) ?>">
+                <span><?php echo $order['obligationcount']?></span>
 
-            <span>待付款</span>
+                <span>待付款</span>
+                </a>
+            </li>
 
-        </li>
 
-        <li>
 
-            <span><?php echo $order['receivingcount']?></span>
+            <li>
+                <a href="<?php echo Url::to(['/order/all-order?type=2']) ?>">
+                <span><?php echo $order['receivingcount']?></span>
 
-            <span>待收货</span>
+                <span>待收货</span>
+                </a>
+            </li>
 
-        </li>
 
-        <li>
 
-            <span><?php echo $order['commentcount']?></span>
+            <li>
+                <a href="<?php echo Url::to(['/order/all-order?type=3']) ?>">
+                <span><?php echo $order['commentcount']?></span>
 
-            <span>待评价</span>
+                <span>待评价</span>
+                </a>
+            </li>
 
-        </li>
 
-        <li>
 
-            <span><?php echo $order['replacementcount']?></span>
+            <li>
+                <a href="<?php echo Url::to(['/order/all-order?type=4']) ?>">
+                <span><?php echo $order['replacementcount']?></span>
 
-            <span>退换货</span>
-
-        </li>
+                <span>退换货</span>
+                </a>
+            </li>
 
     <?php else:?>
 

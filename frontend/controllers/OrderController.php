@@ -156,8 +156,12 @@ class OrderController extends  Controller
         $request = Yii::$app->request;
         if($user_date){
             $type = $request->get('type');
-            $order_date = EcsOrderInfo::order_date($user_date,$type);
-            return $this->render('myorder',['date' =>$order_date,'type'=>$type]);
+            $order_date = EcsOrderInfo::order_date($user_date,5);
+            $not_paydate = EcsOrderInfo::order_date($user_date,1);
+            $pay_date =  EcsOrderInfo::order_date($user_date,2);
+            $comment_date =  EcsOrderInfo::order_date($user_date,3);
+
+            return $this->render('myorder',['date' =>$order_date,'type'=>$type,'not_paydate'=>$not_paydate,'pay_date'=>$pay_date,'comment_date'=>$comment_date]);
         }else{
             return $this->redirect('/login/login');
         }
